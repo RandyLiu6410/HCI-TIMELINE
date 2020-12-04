@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function SortIcon() {
+export interface SortIconProps {
+}
+
+const SortIcon: React.FC<SortIconProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -14,3 +16,5 @@ const styles = StyleSheet.create({
       
     },
 });
+
+export default SortIcon;

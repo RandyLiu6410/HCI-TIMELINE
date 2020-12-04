@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function DeleteIcon() {
+export interface DeleteIconProps {
+}
+
+const DeleteIcon: React.FC<DeleteIconProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -14,3 +16,5 @@ const styles = StyleSheet.create({
       
     },
 });
+
+export default DeleteIcon;

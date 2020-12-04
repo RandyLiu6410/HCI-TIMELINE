@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function Header() {
+export interface HeaderProps {
+    hasChild: boolean;
+    child: string;
+}
+
+const Header: React.FC<HeaderProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,10 +19,4 @@ const styles = StyleSheet.create({
     },
 });
 
-Header.defaultProps = {
-};
-  
-Header.propTypes = {
-    hasChild: PropTypes.bool.isRequired,
-    child: PropTypes.string
-};
+export default Header;

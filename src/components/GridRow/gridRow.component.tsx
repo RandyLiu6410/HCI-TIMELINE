@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function GridRow() {
+export interface GridRowProps {
+    tagName: string;
+}
+
+const GridRow: React.FC<GridRowProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,9 +18,4 @@ const styles = StyleSheet.create({
     },
 });
 
-GridRow.defaultProps = {
-};
-  
-GridRow.propTypes = {
-    tagName: PropTypes.string.isRequired
-};
+export default GridRow;

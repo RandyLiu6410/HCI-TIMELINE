@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function SearchLayout() {
+export interface SearchLayoutProps {
+    tagHistory: string[];
+    history: string[];
+}
+
+const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,10 +19,4 @@ const styles = StyleSheet.create({
     },
 });
 
-SearchLayout.defaultProps = {
-};
-  
-SearchLayout.propTypes = {
-    tagHistory: PropTypes.array.isRequired,
-    history: PropTypes.array.isRequired,
-};
+export default SearchLayout;

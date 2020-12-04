@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function TextButton() {
+export interface TextButtonProps {
+    text: string;
+}
+
+const TextButton: React.FC<TextButtonProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,9 +18,4 @@ const styles = StyleSheet.create({
     },
 });
 
-TextButton.defaultProps = {
-};
-  
-TextButton.propTypes = {
-    text: PropTypes.string.isRequired,
-};
+export default TextButton;

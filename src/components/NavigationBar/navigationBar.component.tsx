@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function NavigationBar() {
+export interface NavigationBarProps {
+}
+
+const NavigationBar: React.FC<NavigationBarProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,8 +17,4 @@ const styles = StyleSheet.create({
     },
 });
 
-NavigationBar.defaultProps = {
-};
-  
-NavigationBar.propTypes = {
-};
+export default NavigationBar;

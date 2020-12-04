@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function IconButton() {
+export interface IconButtonProps {
+    icon: string;
+}
+
+const IconButton: React.FC<IconButtonProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,9 +18,4 @@ const styles = StyleSheet.create({
     },
 });
 
-IconButton.defaultProps = {
-};
-  
-IconButton.propTypes = {
-    icon: PropTypes.func.isRequired,
-};
+export default IconButton;

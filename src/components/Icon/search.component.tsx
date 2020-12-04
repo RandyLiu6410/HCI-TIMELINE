@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function SearchIcon() {
+export interface SearchIconProps {
+}
+
+const SearchIcon: React.FC<SearchIconProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -14,3 +16,5 @@ const styles = StyleSheet.create({
       
     },
 });
+
+export default SearchIcon;

@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function NewsLayout() {
+export interface NewsLayoutProps {
+    value: object;
+}
+
+const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,9 +18,4 @@ const styles = StyleSheet.create({
     },
 });
 
-NewsLayout.defaultProps = {
-};
-  
-NewsLayout.propTypes = {
-    value: PropTypes.object.isRequired
-};
+export default NewsLayout;

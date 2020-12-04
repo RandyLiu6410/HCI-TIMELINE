@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function TabBar() {
+export interface TabBarProps {
+}
+
+const TabBar: React.FC<TabBarProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,8 +17,4 @@ const styles = StyleSheet.create({
     },
 });
 
-TabBar.defaultProps = {
-};
-  
-TabBar.propTypes = {
-};
+export default TabBar;

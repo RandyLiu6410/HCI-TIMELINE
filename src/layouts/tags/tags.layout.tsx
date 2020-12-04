@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
 
-export default function TagsLayout() {
+export interface TagsLayoutProps {
+    tags: string[];
+}
+
+const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
     return(
         <View style={styles.container}>
         </View>
@@ -15,9 +18,4 @@ const styles = StyleSheet.create({
     },
 });
 
-TagsLayout.defaultProps = {
-};
-  
-TagsLayout.propTypes = {
-    tags: PropTypes.array.isRequired
-};
+export default TagsLayout;
