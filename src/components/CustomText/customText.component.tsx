@@ -1,23 +1,32 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from "prop-types";
-import { LinearTextGradient } from "react-native-text-gradient";
+import { StyleSheet, View } from 'react-native';
+import Svg, {
+    LinearGradient,
+    Text,
+    Defs,
+    Stop,
+    TSpan
+  } from 'react-native-svg';
 
 export interface CustomTextProps {
     text: string;
+    width: number;
+    fontSize: number;
   }
 
 const CustomText: React.FC<CustomTextProps> = (props) => {
     return(
-        <LinearTextGradient
-        style={{ fontWeight: "bold", fontSize: 72 }}
-        locations={[0, 1]}
-        colors={["red", "blue"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        >
-            {props.text}
-        </LinearTextGradient>
+        <Svg height={props.fontSize + 10} width={props.width}>
+          <Defs>
+            <LinearGradient id="rainbow" x1="0" x2="100%" y1="100%" y2="0%" gradientUnits="userSpaceOnUse" >
+              <Stop stopColor="#1DB5FF" offset="0%" />
+              <Stop stopColor="#7B40DC" offset="95.79%" />
+            </LinearGradient>
+          </Defs>
+          <Text fill="url(#rainbow)">
+            <TSpan fontWeight="bold" fontSize={props.fontSize} x="0" dy={props.fontSize}>{props.text}</TSpan>
+          </Text>
+        </Svg>
     );
 }
 
