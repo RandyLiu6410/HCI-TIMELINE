@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from "prop-types";
 
-export default function ConfirmButton() {
+export default function TextButton() {
     return(
         <View style={styles.container}>
         </View>
@@ -15,8 +15,9 @@ const styles = StyleSheet.create({
     },
 });
 
-ConfirmButton.defaultProps = {
+TextButton.defaultProps = {
 };
   
-ConfirmButton.propTypes = {
+TextButton.propTypes = {
+    text: PropTypes.string.isRequired,
 };

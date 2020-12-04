@@ -1,9 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from "prop-types";
-import TagIcon from '../../Icon/tag.component';
 
-export default function AddTagButton() {
+export default function IconButton() {
     return(
         <View style={styles.container}>
         </View>
@@ -16,10 +15,9 @@ const styles = StyleSheet.create({
     },
 });
 
-AddTagButton.defaultProps = {
-    icon: TagIcon
+IconButton.defaultProps = {
 };
   
-AddTagButton.propTypes = {
-    icon: PropTypes.func.isRequired
+IconButton.propTypes = {
+    icon: PropTypes.func.isRequired,
 };
