@@ -7,7 +7,7 @@ const userSchema = new Schema({
     password: {type: String, require: true},
     followtags: [
         {
-            tageName: {type: String, require: true},
+            tagId: {type: String, require: true},
             lastSeen: {type: Number, require: true}
         }
     ],
