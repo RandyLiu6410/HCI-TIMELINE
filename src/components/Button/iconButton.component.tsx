@@ -3,15 +3,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 export interface IconButtonProps {
-    style: object;
     icon: string;
     color: string;
     size: number;
+    onPress: any;
 }
 
 const IconButton: React.FC<IconButtonProps> = (props) => {
     return(
-        <AntDesign name={props.icon} size={props.size} color={props.color} />
+        <AntDesign onPress={props.onPress} name={props.icon} size={props.size} color={props.color} />
     );
 }
 
