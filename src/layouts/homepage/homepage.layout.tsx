@@ -20,7 +20,8 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
             <Tab.Navigator 
                 tabBarOptions={{
                     indicatorStyle: {backgroundColor: '#7B40DC'},
-                    labelStyle: {fontSize: 10}
+                    labelStyle: {fontSize: 10},
+                    style: {backgroundColor: '#101010'}
                 }}
                 // tabBar={
                 // (props) => { 

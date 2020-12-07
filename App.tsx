@@ -20,7 +20,7 @@ const Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: 'black',
+    background: '#101010',
     card: 'black',
     text: '#FFFFFF',
     primary: '#7B40DC',
