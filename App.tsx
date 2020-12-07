@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Button } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Button, Dimensions } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 
 import HomepageLayout from './src/layouts/homepage/homepage.layout';
 import TagsLayout from './src/layouts/tags/tags.layout';
@@ -21,14 +22,14 @@ const Theme = {
   colors: {
     ...DefaultTheme.colors,
     background: '#101010',
-    card: 'black',
+    // card: 'black',
     text: '#FFFFFF',
     primary: '#7B40DC',
+    border: '#101010'
   },
 };
 
 export default function App() {
-  const sheetRef = React.useRef(null);
   const Tab = createBottomTabNavigator();
 
   return (
@@ -58,7 +59,8 @@ export default function App() {
         tabBarOptions={{
           activeTintColor: '#4D7AEE',
           inactiveTintColor: 'gray',
-          showLabel: false
+          showLabel: false,
+          style: {backgroundColor: '#101010'}
         }}
         >
           <Tab.Screen name="home" component={HomepageLayout} />
@@ -67,32 +69,17 @@ export default function App() {
           <Tab.Screen name="user" component={ProfileLayout} />
         </Tab.Navigator>
       </NavigationContainer>
-      {/* <MainCard
-        image=""
-        source="Newsweek"
-        title="Obama Says Biden's Margin of Victory Over Trump Is Bigger than Trump's Margin Over Clinton in 2016"
-        tags="US Election"
-        publishedHours={7}
-      />
-      <NavigationBar/>
-      <Button
-        title="Open Bottom Sheet"
-        onPress={() => sheetRef.current.snapTo(0)}
-      />
-      <StatusBar style="auto" /> */}
-      {/* <TagPopUp 
-        sheetRef={sheetRef}
-        title="Obama Says Biden's Margin of Victory Over Trump Is Bigger than Trump's Margin Over Clinton in 2016"
-        tags={["test1", "test2"]}
-      /> */}
+      <StatusBar style="light" />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#000000',
+    // flex: 1,
+    backgroundColor: '#101010',
+    height: Dimensions.get('window').height
+    // top: Constants.statusBarHeight,
     // alignItems: 'center',
     // justifyContent: 'center',
   }
