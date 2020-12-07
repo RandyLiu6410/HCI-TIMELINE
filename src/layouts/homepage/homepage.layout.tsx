@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator, MaterialTopTabBar } from '@react-navigation/material-top-tabs';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import LatestLayout from './latest.layout';
 import FollowingLayout from './following.layout';
@@ -16,7 +17,17 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
 
     return(
         <View style={styles.container}>
-            <Tab.Navigator>
+            <Tab.Navigator 
+            tabBarOptions={{
+                indicatorStyle: {backgroundColor: '#7B40DC'}
+            }}
+                // tabBar={
+                // (props) => { 
+                //     return ( <LinearGradient colors={['#1DB5FF', '#7B40DC']} start={[1, 0]} end={[0, 0]}> 
+                //     <MaterialTopTabBar {...props} style={{backgroundColor: 'transparent' }} /> 
+                //     </LinearGradient> ); 
+                // }}
+            >
                 <Tab.Screen name="Latest" component={LatestLayout} />
                 <Tab.Screen name="Following" component={FollowingLayout} />
                 <Tab.Screen name="Locals" component={LocalsLayout} />

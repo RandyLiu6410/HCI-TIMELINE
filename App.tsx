@@ -1,17 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 import HomepageLayout from './src/layouts/homepage/homepage.layout';
+import TagsLayout from './src/layouts/tags/tags.layout';
+import SearchLayout from './src/layouts/search/search.layout';
+import ProfileLayout from './src/layouts/profile/profile.layout';
 
 import Header from './src/components/Header/header.component';
 import TabBar from './src/components/TabBar/tabBar.component';
 import NavigationBar from './src/components/NavigationBar/navigationBar.component';
 import TagPopUp from './src/components/TagPopUp/tagPopUp.component';
 import MainCard from './src/components/Card/MainCard/mainCard.component';
+
+const Theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: 'black',
+    card: 'black',
+    text: '#FFFFFF',
+    primary: '#7B40DC',
+  },
+};
 
 export default function App() {
   const sheetRef = React.useRef(null);
@@ -23,7 +37,7 @@ export default function App() {
         hasChild={false}
         child="TAGs"
       />
-      <NavigationContainer>
+      <NavigationContainer theme={Theme}>
         <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -42,14 +56,15 @@ export default function App() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'tomato',
+          activeTintColor: '#4D7AEE',
           inactiveTintColor: 'gray',
+          showLabel: false
         }}
         >
           <Tab.Screen name="home" component={HomepageLayout} />
-          <Tab.Screen name="hashtag" component={HomepageLayout} />
-          <Tab.Screen name="search" component={HomepageLayout} />
-          <Tab.Screen name="user" component={HomepageLayout} />
+          <Tab.Screen name="hashtag" component={TagsLayout} />
+          <Tab.Screen name="search" component={SearchLayout} />
+          <Tab.Screen name="user" component={ProfileLayout} />
         </Tab.Navigator>
       </NavigationContainer>
       {/* <MainCard
