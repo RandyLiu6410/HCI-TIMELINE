@@ -27,34 +27,35 @@ const Header: React.FC<HeaderProps> = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        position: "absolute",
-        width: 411,
-        left: screenWidth/2 - 411/2,
-        top: 0,
+        width: "100%",
+        // left: screenWidth/2 - 411/2,
+        // top: 0,
         // width: screenWidth,
         // top: 0,
-        height: 72,
-        marginBottom: screenHeight,
-        backgroundColor: "#222222",
+        height: 60,
+        // marginBottom: screenHeight,
+        backgroundColor: "#101010",
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "#000000",
+        shadowOffset: {width: 0, height: 4},
+        shadowRadius: 10
     },
     appNameLarge: {
         fontFamily: "Audrey",
-        fontSize: 40,
-        alignSelf: "center",
+        fontSize: 30,
         marginTop: 11.5, //incorrect
         color: "#FFFFFF",
     },
     appNameSmall: {
         fontFamily: "Audrey",
         fontSize: 14,
-        alignSelf: "center",
         marginTop: 15,
         color: "#FFFFFF",
     },
     childName: {
         fontFamily: "Gobold",
         fontSize: 24,
-        alignSelf: "center",
         color: "#FFFFFF",
     }
 });

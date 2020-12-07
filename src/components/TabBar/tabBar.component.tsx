@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { Dimensions } from 'react-native';
 import TextButton from '../Button/textButton.component';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -10,26 +11,10 @@ export interface TabBarProps {
 }
 
 const TabBar: React.FC<TabBarProps> = (props) => {
-    function switchTab() {
-
-    }
+    const Tab = createMaterialTopTabNavigator();
 
     return(
         <View style={styles.container}>
-            {/* <Button title="" color="#222222" onPress={() => switchTab}>
-                <Text style={styles.tabName}>Latest</Text>
-            </Button> */}
-            {/* <View style={styles.tabName}>
-                <Button title="Latest" color="#222222" onPress={() => switchTab}/>
-                <Button title="Following" color="#222222" onPress={() => switchTab}/>
-                <Button title="Locals" color="#222222" onPress={() => switchTab}/>
-            </View> */}
-            <Button title="Latest" color="#222222" onPress={() => switchTab}/>
-            <Button title="Following" color="#222222" onPress={() => switchTab}/>
-            <Button title="Locals" color="#222222" onPress={() => switchTab}/>
-            {/* <View style={styles.tabName}>
-                <Button title="Latest" color="#222222" onPress={() => switchTab}/>
-            </View> */}
         </View>
     );
 }
@@ -42,11 +27,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         flexDirection: "row",
-        // marginBottom: screenHeight - 72,
-        
-        // position: "absolute",
-        // left: 47,
-        // top: 76,
     },
     tabName: {
         fontFamily: "Noto Sans",
