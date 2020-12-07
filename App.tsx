@@ -30,13 +30,15 @@ const Theme = {
 };
 
 export default function App() {
+  const [mainRoute, setMainRoute] = React.useState(true);
+  const [routeChild, setRouteChild] = React.useState('');
   const Tab = createBottomTabNavigator();
 
   return (
     <SafeAreaView style={styles.container}>
       <Header
-        hasChild={false}
-        child="TAGs"
+        hasChild={!mainRoute}
+        child={routeChild}
       />
       <NavigationContainer theme={Theme}>
         <Tab.Navigator
@@ -44,12 +46,10 @@ export default function App() {
           tabBarIcon: ({ focused, color, size }) => {
             // let iconName;
 
-            // if (route.name === 'Home') {
-            //   iconName = focused
-            //     ? 'ios-information-circle'
-            //     : 'ios-information-circle-outline';
-            // } else if (route.name === 'Settings') {
-            //   iconName = focused ? 'ios-list-box' : 'ios-list';
+            // if (route.name === 'home' && focused) {
+            //   console.log('home')
+            // } else {
+            //   console.log('other')
             // }
 
             // You can return any component that you like here!
@@ -63,10 +63,29 @@ export default function App() {
           style: {backgroundColor: '#101010'}
         }}
         >
-          <Tab.Screen name="home" component={HomepageLayout} />
-          <Tab.Screen name="hashtag" component={TagsLayout} />
-          <Tab.Screen name="search" component={SearchLayout} />
-          <Tab.Screen name="user" component={ProfileLayout} />
+          <Tab.Screen name="home" component={HomepageLayout} listeners={{
+            focus: e => {
+              setMainRoute(true);
+            }
+          }}/>
+          <Tab.Screen name="hashtag" component={TagsLayout} listeners={{
+            focus: e => {
+              setMainRoute(false);
+              setRouteChild("TAGs");
+            }
+          }}/>
+          <Tab.Screen name="search" component={SearchLayout} listeners={{
+            focus: e => {
+              setMainRoute(false);
+              setRouteChild("SEARCH");
+            }
+          }}/>
+          <Tab.Screen name="user" component={ProfileLayout} listeners={{
+            focus: e => {
+              setMainRoute(false);
+              setRouteChild("USER");
+            }
+          }}/>
         </Tab.Navigator>
       </NavigationContainer>
       <StatusBar style="light" />
@@ -76,9 +95,9 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: '#101010',
-    height: Dimensions.get('window').height
+    // height: Dimensions.get('window').height
     // top: Constants.statusBarHeight,
     // alignItems: 'center',
     // justifyContent: 'center',

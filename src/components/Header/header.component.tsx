@@ -15,6 +15,7 @@ export interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props) => {
     let [fontsLoaded] = useFonts({
         'Audrey': require('../../../assets/fonts/Audrey/Audrey-Normal.otf'),
+        'Gobold': require('../../../assets/fonts/gobold/GoboldBold.otf')
     });
 
     if (!fontsLoaded) {
