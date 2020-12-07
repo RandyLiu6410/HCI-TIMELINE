@@ -17,11 +17,6 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
     const [tags, setTags] = React.useState(props.news.tags);
     const [value, onChangeText] = React.useState("");
 
-    function tagAdded() {
-      setTags(oldArray => [...oldArray, value]);
-      props.sheetRef.current.snapTo(2);
-    }
-
     var tagsView = props.news.tags.map((t, index) => {
       return <GridRow key={index} tagName={t}/>
     })
