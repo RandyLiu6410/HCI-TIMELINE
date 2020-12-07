@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
       backgroundColor: "#424242",
       height: 20,
       width: 60,
-      alignContent: "center"
+      alignContent: "center",
+      flexWrap: "wrap",
     },
     text: {
         color: "#E5E5E5",
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         textAlign: "center",
         height: 14,
-        top: 3
+        top: 3,
     }
 });
 
