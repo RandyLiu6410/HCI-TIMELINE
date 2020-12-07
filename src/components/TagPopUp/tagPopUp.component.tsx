@@ -5,27 +5,24 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import CustomText from '../CustomText/customText.component';
 import GridRow from '../GridRow/gridRow.component';
 import IconButton from '../Button/iconButton.component';
-import Notification from '../Notification/notification.component';
 import NewsModel from '../../model/news.model';
 
 export interface TagPopUpProps {
   sheetRef: React.MutableRefObject<null>;
   news: NewsModel;
+  tagAdded: (arg0: string) => void;
 }
 
 const TagPopUp: React.FC<TagPopUpProps> = (props) => {
     const [tags, setTags] = React.useState(props.news.tags);
     const [value, onChangeText] = React.useState("");
-    const sheetRef = React.useRef(null);
 
     function tagAdded() {
-      setTags(tags.push(value));
-      sheetRef.current.snapTo(0);
+      setTags(oldArray => [...oldArray, value]);
+      props.sheetRef.current.snapTo(2);
     }
 
-    console.log(props.news)
-
-    const tagsView = props.news.tags.map((t, index) => {
+    var tagsView = props.news.tags.map((t, index) => {
       return <GridRow key={index} tagName={t}/>
     })
 
@@ -49,13 +46,12 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
                 value={value}/>
                 {
                   value !== "" ? 
-                  <IconButton onPress={tagAdded} icon="check" size={24} color="white"/>
+                  <IconButton onPress={() => props.tagAdded(value)} icon="check" size={24} color="white"/>
                   :
                   <View />
                 }
             </View>
           </View>
-          <Notification sheetRef={sheetRef} tagName={value}/>
         </View>
       );
 
@@ -66,6 +62,14 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
         borderRadius={10}
         renderContent={renderContent}
         initialSnap={2}
+        onOpenStart={() => {
+          setTags(props.news.tags);
+          console.log('click')
+        }}
+        onCloseEnd={() => {
+          onChangeText('');
+          // sheetRef.current.snapTo(1);
+        }}
       />
     );
 }

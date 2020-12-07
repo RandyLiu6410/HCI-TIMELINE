@@ -4,6 +4,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import MainCard from '../../components/Card/MainCard/mainCard.component';
 import Constants from 'expo-constants';
 import TagPopUp from '../../components/TagPopUp/tagPopUp.component';
+import Notification from '../../components/Notification/notification.component';
+import NewsModel from '../../model/news.model';
 
 const DATA = [
     {
@@ -26,6 +28,7 @@ const DATA = [
         title: "Thousands of Thai protesters call for removal of prime minister",
         context: ["1", "2", "3"],
         postTime: 1607317200000,
+        country: 'US',
         tags: ["Thai Protest", "world", "protest"],
         type: 'politics',
         images: [{
@@ -47,6 +50,7 @@ const DATA = [
         title: "‘Money Heist’ Season 5: Netflix Release Date & What to Expect",
         context: ["1", "2", "3"],
         postTime: 1607328000000,
+        country: 'US',
         tags: ["Netflix", "Money Heist", "God made"],
         type: 'entertainment',
         images: [{
@@ -67,17 +71,19 @@ export interface LatestLayoutProps {
 
 const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     const Tab = createMaterialTopTabNavigator();
-    const sheetRef = React.useRef(null);
+    const tagSheetRef = React.useRef(null);
+    const notificationSheetRef = React.useRef(null);
     const [news, setNews] = React.useState(DATA[0]);
+    const [notification, setNotification] = React.useState('');
 
     const renderItem = DATA.map((item, index) => {
     return <MainCard
         key={index}
         news={item}
-        sheetRef={sheetRef}
-        onPress={(_news: string[]) => {
+        sheetRef={tagSheetRef}
+        onPress={(_news: NewsModel) => {
             setNews(_news);
-            sheetRef.current.snapTo(0);
+            tagSheetRef.current.snapTo(0);
         }}
     />
     })
@@ -88,9 +94,15 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
                 {renderItem}
             </ScrollView>
             <TagPopUp 
-                sheetRef={sheetRef}
+                sheetRef={tagSheetRef}
                 news={news}
+                tagAdded={(tagName: string) => {
+                    setNotification(tagName);
+                    tagSheetRef.current.snapTo(2);
+                    notificationSheetRef.current.snapTo(0);
+                }}
             />
+            <Notification sheetRef={notificationSheetRef} tagName={notification}/>
         </View>
     );
 }
