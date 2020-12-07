@@ -7,28 +7,25 @@ export interface TextButtonProps {
 
 const TextButton: React.FC<TextButtonProps> = (props) => {
     return(
-        <View style={styles.container}>
-            <Text style={styles.text}>{props.text}</Text>
-        </View>
+        // <View style={styles.container}>
+            <Text style={styles.container}>{props.text}</Text>
+        // </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-      borderRadius: 100,
-      backgroundColor: "#424242",
-      height: 20,
-      width: 60,
-      alignContent: "center",
-      flexWrap: "wrap",
-    },
-    text: {
+        borderRadius: 100,
+        backgroundColor: "#424242",
+        // alignContent: "center",
         color: "#E5E5E5",
-        alignSelf: "center",
         fontSize: 10,
         textAlign: "center",
-        height: 14,
-        top: 3,
+        paddingHorizontal: 10,
+        paddingVertical: 3,
+        marginHorizontal: 3,
+        maxWidth: 100,
+        minWidth: 60
     }
 });
 

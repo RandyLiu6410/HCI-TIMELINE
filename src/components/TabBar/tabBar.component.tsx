@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     tabName: {
-        fontFamily: "Noto Sans",
+        // fontFamily: "Noto Sans",
         fontSize: 16,
         position: "absolute",
         lineHeight: 22,

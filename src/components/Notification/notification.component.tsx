@@ -22,7 +22,7 @@ const Notification: React.FC<NotificationProps> = (props) => {
     return(
         <BottomSheet
             ref={props.sheetRef}
-            snapPoints={[250, 0]}
+            snapPoints={[30, 0]}
             renderContent={renderContent}
             initialSnap={1}
         />
@@ -32,10 +32,11 @@ const Notification: React.FC<NotificationProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFFFFF",
-        height: 250,
+        height: 30,
         flexDirection: "row",
         justifyContent: "space-between",
-        padding: 20
+        paddingHorizontal: 10,
+        paddingVertical: 5
     },
     text: {
         fontSize: 18

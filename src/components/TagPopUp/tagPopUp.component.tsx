@@ -6,33 +6,38 @@ import CustomText from '../CustomText/customText.component';
 import GridRow from '../GridRow/gridRow.component';
 import IconButton from '../Button/iconButton.component';
 import Notification from '../Notification/notification.component';
+import NewsModel from '../../model/news.model';
 
 export interface TagPopUpProps {
   sheetRef: React.MutableRefObject<null>;
-  title: string;
-  tags: string[];
+  news: NewsModel;
 }
 
 const TagPopUp: React.FC<TagPopUpProps> = (props) => {
+    const [tags, setTags] = React.useState(props.news.tags);
     const [value, onChangeText] = React.useState("");
     const sheetRef = React.useRef(null);
 
     function tagAdded() {
+      setTags(tags.push(value));
       sheetRef.current.snapTo(0);
     }
+
+    console.log(props.news)
+
+    const tagsView = props.news.tags.map((t, index) => {
+      return <GridRow key={index} tagName={t}/>
+    })
 
     const renderContent = () => (
         <View
           style={styles.container}
         >
           <View style={styles.content}>
-            <Text style={styles.newstitle}>{props.title}</Text>
+            <Text style={styles.newstitle}>{props.news.title}</Text>
             <CustomText text="Suggested Tag" fontSize={18} width={150}/>
             <ScrollView style={styles.scrollView}>
-              <GridRow tagName="US Election"/>
-              <GridRow tagName="Biden"/>
-              <GridRow tagName="Trump"/>
-              <GridRow tagName="US"/>
+              {tagsView}
             </ScrollView>
             <View style={styles.textField}>
               <Text style={styles.hash}>#</Text>
@@ -57,7 +62,7 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
     return(
       <BottomSheet
         ref={props.sheetRef}
-        snapPoints={[550, 300, 0]}
+        snapPoints={[300, 200, 0]}
         borderRadius={10}
         renderContent={renderContent}
         initialSnap={2}
@@ -68,12 +73,14 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#222222",
-        height: 550,
+        height: 300,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
     },
     content: {
-      margin: 15
+      margin: 15,
+      flexDirection: 'column',
+      justifyContent: 'space-between'
     },
     newstitle: {
         fontSize: 12,
@@ -88,13 +95,12 @@ const styles = StyleSheet.create({
     },
     scrollView: {
       // flex: 1,
-      height: "35%",
+      height: "60%",
     },
     textField: {
       flexDirection: "row",
       justifyContent: "space-between",
       width: "100%",
-      top: 10
     },
     hash: {
       color: "#F4B400",

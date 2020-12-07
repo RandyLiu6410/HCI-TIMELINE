@@ -16,7 +16,7 @@ export interface CustomTextProps {
 
 const CustomText: React.FC<CustomTextProps> = (props) => {
     return(
-        <Svg height={props.fontSize + 10} width={props.width}>
+        <Svg id={props.text} height={props.fontSize + 10} width={props.width}>
           <Defs>
             <LinearGradient id="rainbow" x1="0" x2="100%" y1="100%" y2="0%" gradientUnits="userSpaceOnUse" >
               <Stop stopColor="#1DB5FF" offset="0%" />

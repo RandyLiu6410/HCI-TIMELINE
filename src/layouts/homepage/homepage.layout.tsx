@@ -18,9 +18,10 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
     return(
         <View style={styles.container}>
             <Tab.Navigator 
-            tabBarOptions={{
-                indicatorStyle: {backgroundColor: '#7B40DC'}
-            }}
+                tabBarOptions={{
+                    indicatorStyle: {backgroundColor: '#7B40DC'},
+                    labelStyle: {fontSize: 12}
+                }}
                 // tabBar={
                 // (props) => { 
                 //     return ( <LinearGradient colors={['#1DB5FF', '#7B40DC']} start={[1, 0]} end={[0, 0]}> 
@@ -39,7 +40,7 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-      
+      flex: 1
     },
 });
 
