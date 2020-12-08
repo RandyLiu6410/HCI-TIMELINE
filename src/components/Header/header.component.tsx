@@ -39,12 +39,7 @@ const Header: React.FC<HeaderProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        // left: screenWidth/2 - 411/2,
-        // top: 0,
-        // width: screenWidth,
-        // top: 0,
         height: 60,
-        // marginBottom: screenHeight,
         backgroundColor: "#101010",
         justifyContent: "center",
         alignItems: "center",

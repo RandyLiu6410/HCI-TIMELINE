@@ -3,9 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, Headline } from 'react-native-paper';
 import IconButton from '../../Button/iconButton.component';
-import img from "../../../../assets/obama_biden.jpeg";
 import TextButton from '../../Button/textButton.component';
-import TagPopUp from '../../TagPopUp/tagPopUp.component';
 import NewsModel from '../../../model/news.model';
 
 const screenWidth = Dimensions.get('window').width;
@@ -22,14 +20,6 @@ const MainCard: React.FC<MainCardProps> = (props) => {
 
     return(
         <View style={styles.container}>
-            {/* <Image source={img} style={styles.image}></Image>
-            <Text style={styles.source}>{props.source}</Text>
-            <Text style={styles.title}>{props.title}</Text>
-            <TextButton text="# US Election"/>
-            <View style={styles.horizontalView}>
-                <Text style={styles.time}>{props.publishedHours} hours ago</Text>
-                <IconButton icon="hash" color="#828282" size={24} onPress={null}/>
-            </View> */}
             <Card style={styles.card}>
                 <Card.Cover source={{ uri: props.news.images[0].src }} />
                 <Card.Content>
