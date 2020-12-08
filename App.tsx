@@ -54,7 +54,7 @@ export default function App() {
 
             // You can return any component that you like here!
             return <FontAwesome5 name={route.name} size={size} color={color} />;
-          },
+          }
         })}
         tabBarOptions={{
           activeTintColor: '#4D7AEE',

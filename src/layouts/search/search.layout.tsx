@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import Header from '../../components/Header/header.component';
+
 export interface SearchLayoutProps {
     tagHistory: string[];
     history: string[];
@@ -9,6 +11,12 @@ export interface SearchLayoutProps {
 const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
     return(
         <View style={styles.container}>
+            <Header
+                hasChild={true}
+                child={"SEARCH"}
+                previous={null}
+                navigation={null}
+            />
         </View>
     );
 }

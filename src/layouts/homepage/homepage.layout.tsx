@@ -21,6 +21,9 @@ export interface HomepageLayoutProps {
 
 function HomeScreen({ navigation }) {
     const Tab = createMaterialTopTabNavigator();
+    function latestLayoutComponent() {
+        return <LatestLayout cardOnPress={(news: NewsModel) => navigation.navigate('News', { news: news })}/>;
+    };
 
     return (
         <View style={styles.container}>
@@ -37,7 +40,7 @@ function HomeScreen({ navigation }) {
                 //     </LinearGradient> ); 
                 // }}
             >
-                <Tab.Screen name="Latest" component={() => <LatestLayout cardOnPress={(news: NewsModel) => navigation.navigate('News', { news: news })}/>}/>
+                <Tab.Screen name="Latest" component={latestLayoutComponent}/>
                 <Tab.Screen name="Following" component={FollowingLayout} />
                 <Tab.Screen name="Locals" component={LocalsLayout} />
                 <Tab.Screen name="World" component={WorldLayout} />

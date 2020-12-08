@@ -1,8 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { AppLoading } from 'expo';
 
 import TextButton from '../../components/Button/textButton.component';
+import TagIcon from '../../components/Icon/tag.component';
 import NewsModel from '../../model/news.model';
+import TagPopUp from '../../components/TagPopUp/tagPopUp.component';
+import Notification from '../../components/Notification/notification.component';
+
+const win = Dimensions.get('window');
+const ratio = win.width / 540;
 
 export interface NewsLayoutProps {
     value: object;
@@ -11,29 +18,51 @@ export interface NewsLayoutProps {
 const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
     const news: NewsModel = props.route.params.news;
     const nowTime = (new Date()).getTime();
+    const tagSheetRef = React.useRef(null);
+    const notificationSheetRef = React.useRef(null);
+    const [notification, setNotification] = React.useState('');
 
     return(
         <View style={styles.container}>
-            <Image
-                style={styles.mainImage}
-                source={{
-                    uri: props.route.params.news.images[0].src,
+            <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
+                <Image
+                    style={styles.mainImage}
+                    source={{
+                        uri: props.route.params.news.images[0].src,
+                    }}
+                    resizeMode= "contain"
+                />
+                <Text style={styles.source}>{news.source}</Text>
+                <Text style={styles.title}>{news.title}</Text>
+                <View style={styles.grid}>
+                    <Text style={styles.update}>Updated {Math.round((nowTime - news.postTime) / 3600000)} hours ago</Text>
+                    <TagIcon color="#828282" size={16} onPress={() => tagSheetRef.current.snapTo(0)}/>
+                </View>
+                <View style={styles.tags}>
+                {
+                    news.tags.map((t, index) => {
+                        return <TextButton key={index} text={'# ' + t} />
+                    })
+                }
+                </View>
+                <View>
+                {
+                    news.content.map((c, index) => {
+                        return <Text style={styles.content} key={index}>{c}</Text>
+                    })
+                }
+                </View>
+            </ScrollView>
+            <TagPopUp 
+                sheetRef={tagSheetRef}
+                news={news}
+                tagAdded={(tagName: string) => {
+                    setNotification(tagName);
+                    tagSheetRef.current.snapTo(2);
+                    notificationSheetRef.current.snapTo(0);
                 }}
             />
-            <Text style={styles.source}>{news.source}</Text>
-            <Text style={styles.title}>{news.title}</Text>
-            <Text style={styles.update}>Updated {Math.round((nowTime - news.postTime) / 3600000)} hours ago</Text>
-            <View style={styles.tags}>
-            {
-                news.tags.map((t, index) => {
-                    return <TextButton key={index} text={'# ' + t} />
-                })
-            }
-            </View>
-            <Text style={styles.content}>Former President Barack Obama has stated that President-elect Joe Biden's electoral victory over President Donald Trump is greater than Trump's 2016 victory over then-Democratic presidential nominee Hillary Clinton.
-
-In a clip of a forthcoming interview with Gayle King of CBS Sunday Morning, Obama mentioned how, on Election Night 2016, he called Trump at 2:30 in the morning to congratulate him on his victory.
-</Text>
+            <Notification sheetRef={notificationSheetRef} tagName={notification}/>
         </View>
     );
 }
@@ -41,13 +70,14 @@ In a clip of a forthcoming interview with Gayle King of CBS Sunday Morning, Obam
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 20,
-        marginVertical: 20
+    },
+    scrollview: {
+        marginHorizontal: 20
     },
     mainImage: {
-        width: "100%",
+        width: win.width,
+        height: ratio * 360,
         alignSelf: "stretch",
-        resizeMode: "contain",
         flex: 1
     },
     source: {
@@ -58,6 +88,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: "#FFFFFF",
         marginBottom: 10,
+    },
+    grid: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     update: {
         fontSize: 10,
@@ -72,7 +106,8 @@ const styles = StyleSheet.create({
     },
     content: {
         fontSize: 18,
-        color: "#FFFFFF"
+        color: "#FFFFFF",
+        marginVertical: 10
     }
 });
 
