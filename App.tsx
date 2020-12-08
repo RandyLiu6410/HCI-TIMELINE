@@ -36,10 +36,10 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header
+      {/* <Header
         hasChild={!mainRoute}
         child={routeChild}
-      />
+      /> */}
       <NavigationContainer theme={Theme}>
         <Tab.Navigator
         screenOptions={({ route }) => ({

@@ -2,7 +2,7 @@ export default interface NewsModel {
     id: string,
     source: string;
     title: string;
-    context: string[];
+    content: string[];
     postTime: number;
     country: string;
     tags: string[];

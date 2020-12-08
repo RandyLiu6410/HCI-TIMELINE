@@ -12,7 +12,7 @@ const DATA = [
         id: "1",
         source: "Newsweek",
         title: "Obama Says Biden's Margin of Victory Over Trump Is Bigger than Trump's Margin Over Clinton in 2016",
-        context: ["1", "2", "3"],
+        content: ["1", "2", "3"],
         postTime: 1607302800000,
         country: 'US',
         tags: ["US Election", "US", "Biden", "Trump"],
@@ -26,7 +26,7 @@ const DATA = [
         id: "2",
         source: "Reuters",
         title: "Thousands of Thai protesters call for removal of prime minister",
-        context: ["1", "2", "3"],
+        content: ["1", "2", "3"],
         postTime: 1607317200000,
         country: 'US',
         tags: ["Thai Protest", "world", "protest"],
@@ -48,7 +48,7 @@ const DATA = [
         id: "3",
         source: "What’s on Netflix",
         title: "‘Money Heist’ Season 5: Netflix Release Date & What to Expect",
-        context: ["1", "2", "3"],
+        content: ["1", "2", "3"],
         postTime: 1607328000000,
         country: 'US',
         tags: ["Netflix", "Money Heist", "God made"],
@@ -66,7 +66,7 @@ const DATA = [
 
 export interface LatestLayoutProps {
     // items: object[];
-    onPress: Function;
+    cardOnPress: Function;
 }
 
 const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
@@ -81,10 +81,11 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
         key={index}
         news={item}
         sheetRef={tagSheetRef}
-        onPress={(_news: NewsModel) => {
+        tagOnPress={(_news: NewsModel) => {
             setNews(_news);
             tagSheetRef.current.snapTo(0);
         }}
+        onPress={props.cardOnPress}
     />
     })
 

@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import CustomText from '../CustomText/customText.component';
 import GridRow from '../GridRow/gridRow.component';
-import IconButton from '../Button/iconButton.component';
+import ConfirmIcon from '../Icon/confirm.component';
 import NewsModel from '../../model/news.model';
 
 export interface TagPopUpProps {
@@ -41,7 +41,7 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
                 value={value}/>
                 {
                   value !== "" ? 
-                  <IconButton onPress={() => props.tagAdded(value)} icon="check" size={24} color="white"/>
+                  <ConfirmIcon onPress={() => props.tagAdded(value)} size={24} color="white"/>
                   :
                   <View />
                 }

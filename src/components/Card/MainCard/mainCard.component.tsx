@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, Headline } from 'react-native-paper';
-import IconButton from '../../Button/iconButton.component';
+import TagIcon from '../../Icon/tag.component';
 import TextButton from '../../Button/textButton.component';
 import NewsModel from '../../../model/news.model';
 
@@ -12,6 +12,7 @@ const screenHeight = Dimensions.get('window').height;
 export interface MainCardProps {
     news: NewsModel;
     sheetRef: React.MutableRefObject<null>;
+    tagOnPress: Function;
     onPress: Function;
 }
 
@@ -20,7 +21,7 @@ const MainCard: React.FC<MainCardProps> = (props) => {
 
     return(
         <View style={styles.container}>
-            <Card style={styles.card}>
+            <Card style={styles.card} onPress={() => props.onPress(props.news)}>
                 <Card.Cover source={{ uri: props.news.images[0].src }} />
                 <Card.Content>
                     <Title style={styles.source}>{props.news.source}</Title>
@@ -35,7 +36,7 @@ const MainCard: React.FC<MainCardProps> = (props) => {
                 </Card.Content>
                 <Card.Content style={styles.footer}>
                     <Paragraph style={styles.time}>{Math.round((nowTime - props.news.postTime) / 3600000)} hours ago</Paragraph>
-                    <IconButton icon="hash" color="#828282" size={20} onPress={() => props.onPress(props.news)}/>
+                    <TagIcon color="#828282" size={20} onPress={() => props.tagOnPress(props.news)}/>
                 </Card.Content>
             </Card>
         </View>

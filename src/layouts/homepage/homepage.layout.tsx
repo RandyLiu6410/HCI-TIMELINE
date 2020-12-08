@@ -1,21 +1,28 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createMaterialTopTabNavigator, MaterialTopTabBar } from '@react-navigation/material-top-tabs';
-import { LinearGradient } from 'expo-linear-gradient';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Header from '../../components/Header/header.component';
 
 import LatestLayout from './latest.layout';
 import FollowingLayout from './following.layout';
 import LocalsLayout from './locals.layout';
 import WorldLayout from './world.layout';
 
+import NewsLayout from '../news/news.layout';
+
+import NewsModel from '../../model/news.model';
+
 export interface HomepageLayoutProps {
     // items: object[];
 }
 
-const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
+function HomeScreen({ navigation }) {
     const Tab = createMaterialTopTabNavigator();
 
-    return(
+    return (
         <View style={styles.container}>
             <Tab.Navigator 
                 tabBarOptions={{
@@ -30,12 +37,35 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
                 //     </LinearGradient> ); 
                 // }}
             >
-                <Tab.Screen name="Latest" component={LatestLayout} />
+                <Tab.Screen name="Latest" component={() => <LatestLayout cardOnPress={(news: NewsModel) => navigation.navigate('News', { news: news })}/>}/>
                 <Tab.Screen name="Following" component={FollowingLayout} />
                 <Tab.Screen name="Locals" component={LocalsLayout} />
                 <Tab.Screen name="World" component={WorldLayout} />
             </Tab.Navigator>
         </View>
+    );
+}
+
+const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
+    const Stack = createStackNavigator();
+
+    return(
+        <Stack.Navigator screenOptions={{
+            header: ({ scene, previous, navigation }) => {
+              
+                return (
+                    <Header
+                        hasChild={false}
+                        child={""}
+                        previous={previous}
+                        navigation={navigation}
+                    />
+                );
+            }
+        }}>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="News" component={NewsLayout} />
+        </Stack.Navigator>
     );
 }
 

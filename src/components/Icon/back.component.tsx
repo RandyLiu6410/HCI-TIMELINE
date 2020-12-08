@@ -2,15 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
-export interface ConfirmIconProps {
+export interface BackIconProps {
     color: string;
     size: number;
     onPress: any;
 }
 
-const ConfirmIcon: React.FC<ConfirmIconProps> = (props) => {
+const BackIcon: React.FC<BackIconProps> = (props) => {
     return(
-        <AntDesign onPress={props.onPress} name="check" size={props.size} color={props.color} />
+        <AntDesign onPress={props.onPress} name="left" size={props.size} color={props.color}/>
     );
 }
 
@@ -20,4 +20,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ConfirmIcon;
+export default BackIcon;

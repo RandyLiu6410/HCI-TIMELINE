@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
+
+import BackIcon from '../../components/Icon/back.component';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -10,6 +12,8 @@ const screenHeight = Dimensions.get('window').height;
 export interface HeaderProps {
     hasChild: boolean;
     child: string;
+    previous: any;
+    navigation: StackNavigationProp<Record<string, object | undefined>, string>;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
@@ -23,6 +27,13 @@ const Header: React.FC<HeaderProps> = (props) => {
     } else {
         return (
             <View style={styles.container}>
+                {
+                    props.previous ? 
+                    <View style={styles.backButton}>
+                        <BackIcon onPress={props.navigation.goBack} color="#C4C4C4" size={20}/> 
+                    </View>
+                    : <View />
+                }
                 {props.hasChild ?
                 <React.Fragment>
                     <Text style={styles.appNameSmall}>TIMELINE</Text>
@@ -52,6 +63,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         marginTop: 11.5, //incorrect
         color: "#FFFFFF",
+        alignSelf: 'center'
     },
     appNameSmall: {
         fontFamily: "Audrey",
@@ -63,6 +75,11 @@ const styles = StyleSheet.create({
         fontFamily: "Gobold",
         fontSize: 24,
         color: "#FFFFFF",
+    },
+    backButton: {
+        position: 'absolute',
+        alignSelf: 'flex-start',
+        left: 20,
     }
 });
 
