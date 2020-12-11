@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                 {props.hasChild ?
                 <React.Fragment>
                     <Text style={styles.appNameSmall}>TIMELINE</Text>
-                    <Text style={styles.childName}>{props.child}</Text>
+                    <Text style={styles.childName}>{props.child}</Text>  
                 </React.Fragment>
                 :
                 <Text style={styles.appNameLarge}>TIMELINE</Text>
@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        height: 60,
+        height: 72,
         backgroundColor: "#101010",
         justifyContent: "center",
         alignItems: "center",
@@ -66,12 +66,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     appNameSmall: {
+        flex: 1,
         fontFamily: "Audrey",
         fontSize: 14,
         marginTop: 15,
         color: "#FFFFFF",
     },
     childName: {
+        flex: 4,
         fontFamily: "Gobold",
         fontSize: 24,
         color: "#FFFFFF",
