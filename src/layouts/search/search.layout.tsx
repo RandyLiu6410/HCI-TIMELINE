@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 
 import Header from '../../components/Header/header.component';
 import { SearchBar } from 'react-native-elements';
@@ -18,87 +18,92 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
     const [more, setMore] = React.useState(false);
     const tags = ['US Election', 'Taiwan', 'HK Protest', 'Tokyo Olympic', 'NTU', 'Play Station', 'Election', 'Thailand Protest',
     'Covid-19', 'China', 'Covid-19 Vaccines'];
-    const keywords = ['money heist', 'buy mask'];
+    const keywords = ['money heist', 'buy mask', 'windows update', 'airpods max'];
 
     function doSearch(search) {
         onChangeText(search)
     }
     
     return(
-        <View style={styles.container}>
-            <Header
-                hasChild={true}
-                child={"SEARCH"}
-                previous={null}
-                navigation={null}
-            />
-            <SearchBar
-                placeholder="Search for keywords or tags"
-                onChangeText={
-                    search => doSearch(search)
-                }
-                value={search}
-                // clearIcon={false}
-                containerStyle={styles.searchBarContainer}
-                // inputContainerStyle={styles.inputContainer}
-            />
-            <React.Fragment>
-                {
-                    search !== '' ? 
-                    <View>
-                        
-                    </View>
-                    :
-                    <View>
-                        <Text style={styles.history}>History</Text>
-                        <View style={styles.tags}>
-                        {    
-                            more ? 
-                            tags.map((t, index) => {
-                                return (
-                                <TouchableOpacity onPress={()=>doSearch(t)}>
-                                    <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} marginTop={0}/>
-                                </TouchableOpacity>
-                                )
-                            })
-                            :
-                            tags.slice(0,6).map((t, index) => {
-                                return (
-                                <TouchableOpacity onPress={()=>doSearch(t)}>
-                                    <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} marginTop={0}/>
-                                </TouchableOpacity>
-                                )
-                            })
-                        }
-                        {   
-                            more ?
-                            <></>
-                            :
-                            <TouchableOpacity onPress={()=>{setMore(true)}}>
-                                <MoreIcon size={20} color={'#C4C4C4'}></MoreIcon>
-                            </TouchableOpacity>
-                        }
+        <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.scrollView}>
+                <Header
+                    hasChild={true}
+                    child={"SEARCH"}
+                    previous={null}
+                    navigation={null}
+                />
+                <SearchBar
+                    placeholder="Search for keywords or tags"
+                    onChangeText={
+                        search => doSearch(search)
+                    }
+                    value={search}
+                    // clearIcon={false}
+                    containerStyle={styles.searchBarContainer}
+                    // inputContainerStyle={styles.inputContainer}
+                />
+                <React.Fragment>
+                    {
+                        search !== '' ? 
+                        <View>
+                            
                         </View>
-                        {    
-                            keywords.map((t, index) => {
-                                return (
-                                <TouchableOpacity style={styles.keywordWrapper} onPress={()=>doSearch(t)}>
-                                    <Text key={index} style={styles.keyword}>{t}</Text>
+                        :
+                        <View>
+                            <Text style={styles.history}>History</Text>
+                            <View style={styles.tags}>
+                            {    
+                                more ? 
+                                tags.map((t, index) => {
+                                    return (
+                                    <TouchableOpacity onPress={()=>doSearch(t)}>
+                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} marginTop={0}/>
+                                    </TouchableOpacity>
+                                    )
+                                })
+                                :
+                                tags.slice(0,6).map((t, index) => {
+                                    return (
+                                    <TouchableOpacity onPress={()=>doSearch(t)}>
+                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} marginTop={0}/>
+                                    </TouchableOpacity>
+                                    )
+                                })
+                            }
+                            {   
+                                more ?
+                                <></>
+                                :
+                                <TouchableOpacity onPress={()=>{setMore(true)}}>
+                                    <MoreIcon size={20} color={'#C4C4C4'}></MoreIcon>
                                 </TouchableOpacity>
-                                )
-                            })
-                        }
-                    </View>
-                }
+                            }
+                            </View>
+                            {    
+                                keywords.map((t, index) => {
+                                    return (
+                                    <TouchableOpacity style={styles.keywordWrapper} onPress={()=>doSearch(t)}>
+                                        <Text key={index} style={styles.keyword}>{t}</Text>
+                                    </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </View>
+                    }
 
-            </React.Fragment>
-        </View>
+                </React.Fragment>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-      
+        flex: 1
+    },
+    scrollView: {
+        height: "60%",
     },
     searchBarContainer: {
         padding: 0,
