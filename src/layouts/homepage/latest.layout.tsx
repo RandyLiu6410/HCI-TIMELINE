@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 import TagPopUp from '../../components/TagPopUp/tagPopUp.component';
 import Notification from '../../components/Notification/notification.component';
 import NewsModel from '../../model/news.model';
+import { AppLoading } from 'expo';
 
 const DATA = [
     {
@@ -73,6 +74,8 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     const Tab = createMaterialTopTabNavigator();
     const tagSheetRef = React.useRef(null);
     const notificationSheetRef = React.useRef(null);
+    const [isReady, setIsReady] = React.useState(false);
+    const [newsData, setNewsData] = React.useState([]);
     const [news, setNews] = React.useState(DATA[0]);
     const [notification, setNotification] = React.useState('');
 
@@ -88,6 +91,16 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
         onPress={props.cardOnPress}
     />
     })
+
+    if (!isReady) {
+        return (
+            <AppLoading
+              startAsync={_cacheResourcesAsync}
+              onFinish={() => setIsReady(true)}
+              onError={console.warn}
+            />
+        )
+    }
 
     return(
         <View style={styles.container}>
@@ -106,6 +119,15 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
             <Notification sheetRef={notificationSheetRef} tagName={notification}/>
         </View>
     );
+
+    async function _cacheResourcesAsync() {
+        const cacheNews = await fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=7661e34fadc44d65a89f278abd0e5907')
+        .then((res) => res.json())
+        
+        setNewsData(cacheNews.articles);
+
+        return cacheNews;
+      }
 }
 
 const styles = StyleSheet.create({
