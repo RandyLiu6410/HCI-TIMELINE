@@ -22,6 +22,8 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
     const notificationSheetRef = React.useRef(null);
     const [notification, setNotification] = React.useState('');
 
+    console.log(props.route);
+
     return(
         <View style={styles.container}>
             <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
@@ -41,7 +43,7 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                 <View style={styles.tags}>
                 {
                     news.tags.map((t, index) => {
-                        return <TextButton key={index} text={'# ' + t} />
+                        return <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} marginTop={11}/>
                     })
                 }
                 </View>
