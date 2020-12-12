@@ -1,4 +1,7 @@
 const router = require('express').Router();
+const fetch = require("node-fetch");
+const NewsAPI = require('newsapi');
+const newsapi = new NewsAPI(process.env.NEWS_API_KEYS);
 let News = require('../models/news.model');
 
 router.route('/').post((req, res) => {
@@ -10,9 +13,9 @@ router.route('/').post((req, res) => {
 });
 
 router.route('/').get((req, res) => {
-    if(req.query.id)
+    if(req.query.url)
     {
-        News.findById(req.query.id)
+        News.findOne({url: req.query.url})
         .then(news => res.json(news))
         .catch(err => res.status(400).json('Error: ' + err));
     }
@@ -38,5 +41,41 @@ router.route('/').put((req, res) => {
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.route('/addtag/').post((req, res) => {
+    newsapi.v2.everything({
+        q: req.query.q,
+        pageSize: 100
+    })
+    .then(result => {
+        result.articles.map(async a => {
+            await News.findOne({url: a.url}).exec().then(
+                r => {
+                    if(!r)
+                    {
+                        const newNews = new News({
+                            url: a.url,
+                            tags: [req.query.q]
+                        });
+
+                        newNews.save()
+                        .then(() => console.log('News added!'))
+                        .catch(err => console.log('Error: ' + err));
+                    }
+                    else{
+                        News.update(
+                            { _id: r._id }, 
+                            { $push: { tags: req.query.q } },
+                            () => console.log('News updated!')
+                        );
+                    }
+                }
+            )
+            .catch((err) => console.log(err))
+        })
+    })
+    .then(() => res.json('News added!'))
+    .catch(err => res.status(400).json('Error: ' + err))
+  });
 
 module.exports = router;
