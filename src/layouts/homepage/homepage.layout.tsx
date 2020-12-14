@@ -14,6 +14,7 @@ import WorldLayout from './world.layout';
 import NewsLayout from '../news/news.layout';
 
 import NewsModel from '../../model/news.model';
+import LinearGradient from 'react-native-linear-gradient';
 
 export interface HomepageLayoutProps {
     // items: object[];
@@ -35,7 +36,7 @@ function HomeScreen({ navigation }) {
                 }}
                 // tabBar={
                 // (props) => { 
-                //     return ( <LinearGradient colors={['#1DB5FF', '#7B40DC']} start={[1, 0]} end={[0, 0]}> 
+                //     return ( <LinearGradient colors={['#1DB5FF', '#7B40DC']} start={{x: 1, y: 0}} end={{x: 0, y: 0}}> 
                 //     <MaterialTopTabBar {...props} style={{backgroundColor: 'transparent' }} /> 
                 //     </LinearGradient> ); 
                 // }}
@@ -55,7 +56,6 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
     return(
         <Stack.Navigator screenOptions={{
             header: ({ scene, previous, navigation }) => {
-              
                 return (
                     <Header
                         hasChild={false}
