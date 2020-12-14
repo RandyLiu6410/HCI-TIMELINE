@@ -17,12 +17,12 @@ export interface MainCardProps {
 }
 
 const MainCard: React.FC<MainCardProps> = (props) => {
-    const nowTime = (new Date()).getTime();
+    const time = (new Date()).getTime() - (new Date(props.news.publishedAt)).getTime();
 
     return(
         <View style={styles.container}>
             <Card style={styles.card} onPress={() => props.onPress(props.news)}>
-                <Card.Cover source={{ uri: props.news.images[0].src }} />
+                <Card.Cover source={{ uri: props.news.urlToImage }} />
                 <Card.Content>
                     <Title style={styles.source}>{props.news.source}</Title>
                     <Headline style={styles.title}>{props.news.title}</Headline>
@@ -35,7 +35,7 @@ const MainCard: React.FC<MainCardProps> = (props) => {
                     }
                 </Card.Content>
                 <Card.Content style={styles.footer}>
-                    <Paragraph style={styles.time}>{Math.round((nowTime - props.news.postTime) / 3600000)} hours ago</Paragraph>
+                    <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
                     <TagIcon color="#828282" size={20} onPress={() => props.tagOnPress(props.news)}/>
                 </Card.Content>
             </Card>

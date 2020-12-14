@@ -10,6 +10,7 @@ import HomepageLayout from './src/layouts/homepage/homepage.layout';
 import TagsLayout from './src/layouts/tags/tags.layout';
 import SearchLayout from './src/layouts/search/search.layout';
 import ProfileLayout from './src/layouts/profile/profile.layout';
+import TimelineLayout from './src/layouts/timeline/timeline.layout';
 
 import Header from './src/components/Header/header.component';
 import TabBar from './src/components/TabBar/tabBar.component';

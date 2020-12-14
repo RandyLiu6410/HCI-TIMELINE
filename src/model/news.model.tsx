@@ -3,9 +3,9 @@ export default interface NewsModel {
     source: string;
     title: string;
     content: string[];
-    postTime: number;
-    country: string;
+    publishedAt: string;
     tags: string[];
     type: string;
-    images: {src: string, priority: number}[]
+    url: string;
+    urlToImage: string;
 }
