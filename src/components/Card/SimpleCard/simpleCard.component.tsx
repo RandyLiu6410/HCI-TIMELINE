@@ -18,7 +18,12 @@ const SimpleCard: React.FC<SimpleCardProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 5
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#141414',
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        width: '70%'
     },
     source: {
         fontSize: 10,

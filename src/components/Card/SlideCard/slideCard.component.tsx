@@ -60,9 +60,26 @@ export interface SlideCardProps {
 }
 
 const SlideCard: React.FC<SlideCardProps> = (props) => {
+    const [data, setData] = React.useState(DATA);
     const carouselRef = React.useRef(null);
 
-    function renderItem({item, index}) {
+    function removeData(url: string) {
+        var _data = data;
+        const _index = data.findIndex(d => d.url === url);
+        _data.slice(_index, 1);
+
+        setData(_data);
+    }
+
+    function onAdd(url: string) {
+        removeData(url);
+    }
+
+    function onRemove(url: string) {
+        removeData(url);
+    }
+
+    function renderItem({item, index}: {item: NewsModel, index: number}) {
         const time = (new Date()).getTime() - (new Date(item.publishedAt)).getTime();
 
         return (
@@ -77,7 +94,7 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
                     </View>
                     <Card.Content style={styles.tags}>
                         {
-                            item.tags.map((t, index) => {
+                            item.tags.map((t: string, index: number) => {
                                 return <Text key={index} style={styles.tag} >{'# ' + t}</Text>
                             })
                         }
@@ -85,9 +102,10 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
                     <Card.Content style={styles.footer}>
                         <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
                     </Card.Content>
-                    <Card.Actions>
-                        <Button color='#1DB5FF'>Add To Timeline</Button>
-                    </Card.Actions>
+                    {/* <Card.Actions style={styles.footer}>
+                        <Button color='#1DB5FF' onPress={() => onAdd(item.url)}>Add To Timeline</Button>
+                        <Button color='#D11F46' onPress={() => onRemove(item.url)}>Remove</Button>
+                    </Card.Actions> */}
                 </Card>
             </View>
         );
@@ -97,7 +115,7 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
         <View style={styles.container}>
             <Carousel
               ref={carouselRef}
-              data={DATA}
+              data={data}
               renderItem={renderItem}
               sliderWidth={SLIDER_WIDTH}
               itemWidth={ITEM_WIDTH}
@@ -118,17 +136,15 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         width: "100%",
-        height: "100%",
         alignItems: 'center',
         justifyContent: 'center',
     },
     card: {
-        width: "95%",
+        width: "90%",
         backgroundColor: "#141414",
         borderColor: '#7B40DC',
         borderWidth: 1,
         borderRadius: 10,
-        margin: 10
     },
     content: {
         flexDirection: 'row',
@@ -168,13 +184,15 @@ const styles = StyleSheet.create({
         marginRight: 6,
         marginTop: 3
     },
-    footer: {
-        marginTop: 10
-    },
     time: {
         // fontFamily: "Noto Sans",
         fontSize: 10,
         color: "#828282",
+    },
+    footer: {
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 });
 

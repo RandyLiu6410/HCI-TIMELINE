@@ -55,7 +55,8 @@ export interface TimelineProps {
 }
 
 const Timeline: React.FC<TimelineProps> = (props) => {
-    const [selected, setSelected] = React.useState(DATA[0]);
+    const [data, setData] = React.useState(DATA);
+    const [selected, setSelected] = React.useState(data[0]);
 
     function onEventPress(data){
         setSelected(data);
@@ -91,7 +92,7 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         <View style={styles.container}>
             <TimelineList 
                 style={styles.list}
-                data={DATA}
+                data={data}
                 circleSize={18}
                 dotSize={10}
                 dotColor='#000000'
@@ -107,7 +108,6 @@ const Timeline: React.FC<TimelineProps> = (props) => {
                 // onEventPress={onEventPress}
                 renderTime={renderTime}
                 renderDetail={renderDetail}
-                // detailContainerStyle={styles.detailContainerStyle}
                 rowContainerStyle={{
                     alignItems: 'center',
                     justifyContent: 'center'
