@@ -43,7 +43,8 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                 <View style={styles.tags}>
                 {
                     news.tags.map((t, index) => {
-                        return <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} marginTop={11}/>
+                        return <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} paddingHorizontal={10} 
+                        marginTop={11} marginLeft={''} marginRight={2}/>
                     })
                 }
                 </View>

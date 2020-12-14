@@ -9,13 +9,15 @@ export interface MoreIconProps {
 
 const MoreIcon: React.FC<MoreIconProps> = (props) => {
     return(
-        <Feather name="more-horizontal" size={props.size} color={props.color}/>
+        <View style={styles.container}>
+            <Feather name="more-horizontal" size={props.size} color={props.color}/>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-      marginLeft: 21
+      marginLeft: 15
     },
 });
 

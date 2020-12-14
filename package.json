@@ -35,6 +35,7 @@
     "react-native-svg": "^12.1.0",
     "react-native-tab-view": "^2.15.2",
     "react-native-text-gradient": "^0.1.7",
+    "react-native-user-avatar": "^1.0.7",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22"

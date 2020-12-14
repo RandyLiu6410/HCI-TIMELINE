@@ -10,19 +10,21 @@ import MoreIcon from '../../components/Icon/more.component';
 export interface SearchLayoutProps {
     tagHistory: string[];
     history: string[];
-    showMore: () => void;
+    // showMore: () => void;
 }
 
 const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
-    const [search, onChangeText] = React.useState('');
+    const [search, changeText] = React.useState('');
     const [more, setMore] = React.useState(false);
     const tags = ['US Election', 'Taiwan', 'HK Protest', 'Tokyo Olympic', 'NTU', 'Play Station', 'Election', 'Thailand Protest',
     'Covid-19', 'China', 'Covid-19 Vaccines'];
     const keywords = ['money heist', 'buy mask', 'windows update', 'airpods max'];
 
-    function doSearch(search) {
-        onChangeText(search)
-    }
+    console.log(search)
+
+    // function doSearch(search) {
+    //     changeText(search)
+    // }
     
     return(
         <SafeAreaView style={styles.container}>
@@ -36,7 +38,7 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
                 <SearchBar
                     placeholder="Search for keywords or tags"
                     onChangeText={
-                        search => doSearch(search)
+                        search => changeText(search)
                     }
                     value={search}
                     // clearIcon={false}
@@ -57,16 +59,18 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
                                 more ? 
                                 tags.map((t, index) => {
                                     return (
-                                    <TouchableOpacity onPress={()=>doSearch(t)}>
-                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} marginTop={0}/>
+                                    <TouchableOpacity onPress={()=>changeText(t)}>
+                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
+                                        marginLeft={''} marginRight={0}/>
                                     </TouchableOpacity>
                                     )
                                 })
                                 :
-                                tags.slice(0,6).map((t, index) => {
+                                tags.slice(0,5).map((t, index) => {
                                     return (
-                                    <TouchableOpacity onPress={()=>doSearch(t)}>
-                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} marginTop={0}/>
+                                    <TouchableOpacity onPress={()=>changeText(t)}>
+                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
+                                        marginLeft={''} marginRight={0}/>
                                     </TouchableOpacity>
                                     )
                                 })
@@ -83,7 +87,7 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
                             {    
                                 keywords.map((t, index) => {
                                     return (
-                                    <TouchableOpacity style={styles.keywordWrapper} onPress={()=>doSearch(t)}>
+                                    <TouchableOpacity style={styles.keywordWrapper} onPress={()=>changeText(t)}>
                                         <Text key={index} style={styles.keyword}>{t}</Text>
                                     </TouchableOpacity>
                                     )
@@ -125,6 +129,22 @@ const styles = StyleSheet.create({
         marginTop: 17,
         marginBottom: 17,
         marginLeft: 31,
+    },
+    tagButton: {
+        borderRadius: 100,
+        backgroundColor: "#424242",
+        alignContent: "center",
+        justifyContent: "center",
+        color: "#E5E5E5",
+        fontSize: 14,
+        paddingVertical: 6, 
+        paddingHorizontal: 10, 
+        marginHorizontal: 5,
+        marginTop: 0, 
+        marginRight: 0,
+        marginBottom: 17,
+        maxWidth: 200,
+        minWidth: 60,
     },
     keywordWrapper: {
         marginTop: 5,

@@ -30,7 +30,8 @@ const MainCard: React.FC<MainCardProps> = (props) => {
                 <Card.Content style={styles.tags}>
                     {
                         props.news.tags.map((t, index) => {
-                            return <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} marginTop={12}/>
+                            return <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} paddingHorizontal={10} 
+                            marginTop={12} marginLeft={''} marginRight={2}/>
                         })
                     }
                 </Card.Content>
