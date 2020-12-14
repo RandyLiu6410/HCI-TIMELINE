@@ -63,22 +63,6 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
     const [data, setData] = React.useState(DATA);
     const carouselRef = React.useRef(null);
 
-    function removeData(url: string) {
-        var _data = data;
-        const _index = data.findIndex(d => d.url === url);
-        _data.slice(_index, 1);
-
-        setData(_data);
-    }
-
-    function onAdd(url: string) {
-        removeData(url);
-    }
-
-    function onRemove(url: string) {
-        removeData(url);
-    }
-
     function renderItem({item, index}: {item: NewsModel, index: number}) {
         const time = (new Date()).getTime() - (new Date(item.publishedAt)).getTime();
 
@@ -102,10 +86,6 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
                     <Card.Content style={styles.footer}>
                         <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
                     </Card.Content>
-                    {/* <Card.Actions style={styles.footer}>
-                        <Button color='#1DB5FF' onPress={() => onAdd(item.url)}>Add To Timeline</Button>
-                        <Button color='#D11F46' onPress={() => onRemove(item.url)}>Remove</Button>
-                    </Card.Actions> */}
                 </Card>
             </View>
         );
