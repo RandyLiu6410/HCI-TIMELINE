@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, Headline } from 'react-native-paper';
 import TagIcon from '../../Icon/tag.component';
-import TextButton from '../../Button/textButton.component';
 import NewsModel from '../../../model/news.model';
 
 const screenWidth = Dimensions.get('window').width;
@@ -30,7 +29,7 @@ const MainCard: React.FC<MainCardProps> = (props) => {
                 <Card.Content style={styles.tags}>
                     {
                         props.news.tags.map((t, index) => {
-                            return <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} marginTop={12}/>
+                            return <Text key={index} style={styles.tag} >{'# ' + t}</Text>
                         })
                     }
                 </Card.Content>
@@ -73,7 +72,19 @@ const styles = StyleSheet.create({
     tags: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        marginTop: 10
+    },
+    tag: {
+        borderRadius: 100,
+        backgroundColor: "#424242",
+        alignContent: "center",
+        justifyContent: "center",
+        fontSize: 10,
+        color: '#FFFFFF',
+        paddingHorizontal: 8,
+        paddingVertical: 5,
+        marginRight: 10
     },
     footer: {
         marginTop: 20,
