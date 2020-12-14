@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Button } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Image, SafeAreaView, ScrollView, TouchableOpacity, Button } from 'react-native';
+import Timeline from '../../components/Timeline/timeline.component';
 
 import Header from '../../components/Header/header.component';
 import BackIcon from '../../components/Icon/back.component';
 import TextButton from '../../components/Button/textButton.component';
 
 export interface TimelineLayoutProps {
-    tagOnPress: Function;
-    // tag: string;
+    tag: string;
 }
 
 const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
@@ -28,13 +28,14 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
             
             {/* <Button title='goBack' onPress={()=>(navigation.goBack())}></Button> */}
            
-            <ScrollView style={styles.scrollView}>
+            {/* <ScrollView style={styles.scrollView}>
                 <View style={styles.content}>
                     
                 </View>
-            </ScrollView>
+            </ScrollView> */}
+            <Timeline />
         </SafeAreaView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -69,7 +70,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         // justifyContent: 'space-between'
     },
-    
+    scrollview: {
+        marginHorizontal: 20
+    },
 });
 
 export default TimelineLayout;

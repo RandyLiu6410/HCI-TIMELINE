@@ -17,7 +17,7 @@ export interface NewsLayoutProps {
 
 const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
     const news: NewsModel = props.route.params.news;
-    const nowTime = (new Date()).getTime();
+    const time = (new Date()).getTime() - (new Date(news.publishedAt)).getTime();
     const tagSheetRef = React.useRef(null);
     const notificationSheetRef = React.useRef(null);
     const [notification, setNotification] = React.useState('');
@@ -30,14 +30,14 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                 <Image
                     style={styles.mainImage}
                     source={{
-                        uri: props.route.params.news.images[0].src,
+                        uri: props.route.params.news.urlToImage,
                     }}
                     resizeMode= "contain"
                 />
                 <Text style={styles.source}>{news.source}</Text>
                 <Text style={styles.title}>{news.title}</Text>
                 <View style={styles.grid}>
-                    <Text style={styles.update}>Updated {Math.round((nowTime - news.postTime) / 3600000)} hours ago</Text>
+                    <Text style={styles.update}>Updated {Math.round(time / 3600000)} hours ago</Text>
                     <TagIcon color="#828282" size={16} onPress={() => tagSheetRef.current.snapTo(0)}/>
                 </View>
                 <View style={styles.tags}>

@@ -1,12 +1,8 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, FlatList, ScrollView } from 'react-native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import MainCard from '../../components/Card/MainCard/mainCard.component';
-import Constants from 'expo-constants';
-import TagPopUp from '../../components/TagPopUp/tagPopUp.component';
-import Notification from '../../components/Notification/notification.component';
+import { StyleSheet, Text, View } from 'react-native';
 import NewsModel from '../../model/news.model';
-import { AppLoading } from 'expo';
+import SimpleCard from '../Card/SimpleCard/simpleCard.component';
+import TimelineList from 'react-native-timeline-flatlist';
 
 const DATA = [
     {
@@ -19,6 +15,9 @@ const DATA = [
         type: 'politics',
         url: "https://www.politico.com/news/2020/12/13/vandals-black-churches-washington-dc-444940",
         urlToImage: "https://static.politico.com/ab/61/f11f8c744bd29626c37bd5e812c1/20201213-trump-protests-gty-773.jpg",
+        circleSize: 12,
+        circleColor: '#828282',
+        dotColor: '#828282'
     },
     {
         id: "2",
@@ -30,6 +29,9 @@ const DATA = [
         type: 'politics',
         url: "https://www.youtube.com/watch?v=URYpn8PbEng",
         urlToImage: "https://i.ytimg.com/vi/URYpn8PbEng/maxresdefault.jpg",
+        circleSize: 18,
+        circleColor: '#FFFFFF',
+        dotColor: '#000000'
     },
     {
         id: "3",
@@ -41,79 +43,108 @@ const DATA = [
         type: 'entertainment',
         url: "https://www.nytimes.com/2020/12/13/books/john-le-carre-dead.html",
         urlToImage: "https://static01.nyt.com/images/2019/09/02/obituaries/00carre-toppix/00carre-toppix-facebookJumbo-v2.jpg",
-    },
+        circleSize: 12,
+        circleColor: '#828282',
+        dotColor: '#828282'
+    }
   ];
 
-export interface LatestLayoutProps {
-    // items: object[];
-    cardOnPress: Function;
+export interface TimelineProps {
+    // news: NewsModel;
 }
 
-const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
-    const Tab = createMaterialTopTabNavigator();
-    const tagSheetRef = React.useRef(null);
-    const notificationSheetRef = React.useRef(null);
-    const [isReady, setIsReady] = React.useState(false);
-    const [newsData, setNewsData] = React.useState([]);
-    const [news, setNews] = React.useState(DATA[0]);
-    const [notification, setNotification] = React.useState('');
+const Timeline: React.FC<TimelineProps> = (props) => {
+    const [selected, setSelected] = React.useState(DATA[0]);
 
-    const renderItem = DATA.map((item, index) => {
-    return <MainCard
-        key={index}
-        news={item}
-        sheetRef={tagSheetRef}
-        tagOnPress={(_news: NewsModel) => {
-            setNews(_news);
-            tagSheetRef.current.snapTo(0);
-        }}
-        onPress={props.cardOnPress}
-    />
-    })
+    function onEventPress(data){
+        setSelected(data);
+    }
 
-    if (!isReady) {
+    function renderTime(rowData: NewsModel) {
+        const time = new Date(rowData.publishedAt);
+        const year = time.getFullYear();
+        const month = time.getMonth() + 1;
+        const date = time.getDate();
+        const hours = time.getHours();
+        const minutes = time.getMinutes();
+        
         return (
-            <AppLoading
-              startAsync={_cacheResourcesAsync}
-              onFinish={() => setIsReady(true)}
-              onError={console.warn}
-            />
+            <View style={{alignItems: 'center'}}>
+                <Text style={styles.year}>{year}/</Text>
+                <Text style={styles.date}>{month}/{date}</Text>
+                <Text style={styles.time}>{hours < 10 ? '0'+hours.toString() : hours }:{minutes < 10 ? '0'+minutes.toString() : minutes}</Text>
+            </View>
+        )
+    }
+
+    function renderDetail(rowData: NewsModel) {
+        return (
+          <SimpleCard news={rowData}/>
         )
     }
 
     return(
         <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {renderItem}
-            </ScrollView>
-            <TagPopUp 
-                sheetRef={tagSheetRef}
-                news={news}
-                tagAdded={(tagName: string) => {
-                    setNotification(tagName);
-                    tagSheetRef.current.snapTo(2);
-                    notificationSheetRef.current.snapTo(0);
+            <TimelineList 
+                style={styles.list}
+                data={DATA}
+                circleSize={18}
+                dotSize={10}
+                dotColor='#000000'
+                circleColor='#FFFFFF'
+                lineColor='#FFFFFF'
+                innerCircle={'dot'}
+                timeContainerStyle={{minWidth:52, marginTop: -5}}
+                options={{
+                    style:{ 
+                        paddingTop:5,
+                    }
                 }}
+                onEventPress={onEventPress}
+                renderTime={renderTime}
+                renderDetail={renderDetail}
+                detailContainerStyle={styles.detailContainerStyle}
+                rowContainerStyle={{
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+                renderFullLine={true}
             />
-            <Notification sheetRef={notificationSheetRef} tagName={notification}/>
         </View>
     );
-
-    async function _cacheResourcesAsync() {
-        const cacheNews = await fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=7661e34fadc44d65a89f278abd0e5907')
-        .then((res) => res.json())
-        
-        setNewsData(cacheNews.articles);
-
-        return cacheNews;
-      }
 }
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-    //   marginTop: Constants.statusBarHeight
+        flex: 1,
+        padding: 20,
+        paddingTop:65,
+        backgroundColor: '#000000'
+    },
+    list: {
+        flex: 1,
+        backgroundColor: '#000000'
+    },
+    detailContainerStyle: {
+        paddingHorizontal: 5,
+        marginTop: 10,
+        borderRadius: 10,
+        backgroundColor: '#141414',
+        borderColor: 'gray',
+        borderWidth: 0.5
+    },
+    year: {
+        color: '#FFFFFF',
+        fontSize: 10
+    },
+    date: {
+        color: '#FFFFFF',
+        fontSize: 16
+    },
+    time: {
+        color: '#FFFFFF',
+        fontSize: 10
     }
 });
 
-export default LatestLayout;
+export default Timeline;
