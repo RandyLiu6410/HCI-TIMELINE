@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import NewsModel from '../../model/news.model';
 import SimpleCard from '../Card/SimpleCard/simpleCard.component';
+import SlideCard from '../Card/SlideCard/slideCard.component';
 import TimelineList from 'react-native-timeline-flatlist';
 
 const DATA = [
@@ -79,7 +80,10 @@ const Timeline: React.FC<TimelineProps> = (props) => {
 
     function renderDetail(rowData: NewsModel) {
         return (
-          <SimpleCard news={rowData}/>
+            rowData.id == "2" ? 
+            <SlideCard />
+            :
+            <SimpleCard news={rowData}/>
         )
     }
 
@@ -100,10 +104,10 @@ const Timeline: React.FC<TimelineProps> = (props) => {
                         paddingTop:5,
                     }
                 }}
-                onEventPress={onEventPress}
+                // onEventPress={onEventPress}
                 renderTime={renderTime}
                 renderDetail={renderDetail}
-                detailContainerStyle={styles.detailContainerStyle}
+                // detailContainerStyle={styles.detailContainerStyle}
                 rowContainerStyle={{
                     alignItems: 'center',
                     justifyContent: 'center'
@@ -118,7 +122,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        paddingTop:65,
         backgroundColor: '#000000'
     },
     list: {
