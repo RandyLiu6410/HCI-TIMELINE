@@ -38,10 +38,10 @@ const SortPopUp: React.FC<SortPopUpProps> = (props) => {
     return(
       <BottomSheet
         ref={props.sheetRef}
-        snapPoints={[300, 200, 0]}
+        snapPoints={[150, 0]}
         borderRadius={10}
         renderContent={renderContent}
-        initialSnap={0}
+        initialSnap={1}
         onOpenStart={() => {
         //   setTags(props.news.tags);
           console.log('click')
@@ -57,7 +57,7 @@ const SortPopUp: React.FC<SortPopUpProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#222222",
-        height: 300,
+        height: 200,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
     },

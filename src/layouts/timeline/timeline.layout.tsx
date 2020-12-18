@@ -40,7 +40,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
             <SortPopUp
                 sheetRef={sortSheetRef}
                 sortChanged={()=>{
-                    sortSheetRef.current.snapTo(2);
+                    sortSheetRef.current.snapTo(1);
             }}/>
         </SafeAreaView>
     )
@@ -49,8 +49,6 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        display: 'flex',
-        justifyContent: 'flex-end',
         backgroundColor: 'black'
     },
     scrollView: {
