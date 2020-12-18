@@ -16,7 +16,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     const tag  = props.route.params.tag;
     const navigation = props.route.params.navigation;
     const sortSheetRef = React.useRef(null);
-    const [sort, setSort] = React.useState('');
+    const [sort, setSort] = React.useState('new');
     // console.log(tag)
 
     function changeSort() {
@@ -33,13 +33,21 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                 <TextButton text='Following' fontSize={10} paddingVertical={5} paddingHorizontal={15} marginTop={10} 
                  marginRight={15}/>
                 <View style={styles.sort}>
+                    {
+                        sort === 'new'
+                        ?
+                        <Text style={styles.sortText}>Latest</Text>
+                        :
+                        <Text style={styles.sortText}>Oldest</Text>
+                    }
                     <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
                 </View>
             </View>
             <Timeline />
             <SortPopUp
                 sheetRef={sortSheetRef}
-                sortChanged={()=>{
+                sortChanged={(status)=>{
+                    setSort(status);
                     sortSheetRef.current.snapTo(1);
             }}/>
         </SafeAreaView>
@@ -49,14 +57,14 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black'
+        backgroundColor: '#101010'
     },
     scrollView: {
         height: "60%",
     },
     wrapper: {
         marginLeft: 'auto',
-        backgroundColor: 'black'
+        backgroundColor: '#101010'
     },
     title: {
         color: '#FFFFFF',
@@ -72,11 +80,18 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         marginRight: 15,
         marginTop: -5,
+        flexDirection: 'row',
+    },
+    sortText: {
+        color: '#FFFFFF',
+        fontSize: 12,
+        marginRight: 10,
+        marginTop: 3
     },
     back: {
         marginTop: 18.62,
         marginLeft: 19,
-        backgroundColor: 'black'
+        backgroundColor: '#101010'
     },
     content: {
         margin: 40,
