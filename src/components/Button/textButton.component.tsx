@@ -8,7 +8,7 @@ export interface TextButtonProps {
     paddingVertical: number;
     paddingHorizontal: number;
     marginTop: number;
-    marginLeft: string;
+    // marginLeft: string;
     marginRight: number;
     // onPress: any;
 }
@@ -36,7 +36,7 @@ const styles = (props?: any) => StyleSheet.create({
         paddingHorizontal: props.paddingHorizontal,
         marginHorizontal: 5,
         marginTop: props.marginTop,
-        marginLeft: props.marginLeft,
+        // marginLeft: props.marginLeft,
         marginRight: props.marginRight,
         marginBottom: 17,
         maxWidth: 200,

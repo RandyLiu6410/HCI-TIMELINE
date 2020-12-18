@@ -14,8 +14,8 @@ const Notification: React.FC<NotificationProps> = (props) => {
         <View
           style={styles.container}
         >
-          <Text style={styles.text}>The news has added to "{props.tagName}"</Text>
-          <TextButton text="VIEW"/>
+          <Text style={styles.text}>The news has been added to "{props.tagName}"</Text>
+          <TextButton text="VIEW" fontSize={12} paddingVertical={10} paddingHorizontal={10} marginTop={0} marginRight={2}/>
         </View>
       );
 

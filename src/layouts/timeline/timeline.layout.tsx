@@ -5,6 +5,8 @@ import Timeline from '../../components/Timeline/timeline.component';
 import Header from '../../components/Header/header.component';
 import BackIcon from '../../components/Icon/back.component';
 import TextButton from '../../components/Button/textButton.component';
+import SortIcon from '../../components/Icon/sort.component';
+import SortPopUp from '../../components/SortPopUp/sortPopUp.component';
 
 export interface TimelineLayoutProps {
     tag: string;
@@ -13,27 +15,33 @@ export interface TimelineLayoutProps {
 const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     const tag  = props.route.params.tag;
     const navigation = props.route.params.navigation;
-    console.log(tag)
+    const sortSheetRef = React.useRef(null);
+    const [sort, setSort] = React.useState('');
+    // console.log(tag)
+
+    function changeSort() {
+        sortSheetRef.current.snapTo(0);
+    }
 
     return(
         <SafeAreaView style={styles.container}>
-             <View style={styles.back}>
+            <View style={styles.back}>
                 <BackIcon size={20} color={'#C4C4C4'} onPress={()=>(navigation.goBack())}></BackIcon>
             </View>
-            <React.Fragment>
+            <View style={styles.wrapper}>
                 <Text style={styles.title}>{'# ' + tag}</Text>
                 <TextButton text='Following' fontSize={10} paddingVertical={5} paddingHorizontal={15} marginTop={10} 
-                marginLeft={'auto'} marginRight={15}/>
-            </React.Fragment>
-            
-            {/* <Button title='goBack' onPress={()=>(navigation.goBack())}></Button> */}
-           
-            {/* <ScrollView style={styles.scrollView}>
-                <View style={styles.content}>
-                    
+                 marginRight={15}/>
+                <View style={styles.sort}>
+                    <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
                 </View>
-            </ScrollView> */}
+            </View>
             <Timeline />
+            <SortPopUp
+                sheetRef={sortSheetRef}
+                sortChanged={()=>{
+                    sortSheetRef.current.snapTo(2);
+            }}/>
         </SafeAreaView>
     )
 }
@@ -42,10 +50,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: 'flex',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        backgroundColor: 'black'
     },
     scrollView: {
         height: "60%",
+    },
+    wrapper: {
+        marginLeft: 'auto',
+        backgroundColor: 'black'
     },
     title: {
         color: '#FFFFFF',
@@ -54,14 +67,18 @@ const styles = StyleSheet.create({
         fontFamily: 'Gobold',
         // fontWeight: 'bold',
         marginTop: -20,
-        marginRight: 20
+        marginRight: 15,
+        marginBottom: 5
     },
-    wrapper: {
-        marginLeft: 'auto'
+    sort: {
+        marginLeft: 'auto',
+        marginRight: 15,
+        marginTop: -5,
     },
     back: {
         marginTop: 18.62,
-        marginLeft: 19
+        marginLeft: 19,
+        backgroundColor: 'black'
     },
     content: {
         margin: 40,
