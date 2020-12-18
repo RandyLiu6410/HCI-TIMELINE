@@ -1,11 +1,11 @@
 export default interface NewsModel {
-    id: string,
-    source: string;
+    url: string;
     title: string;
+    source: string;
+    author: string;
+    description: string;
     content: string[];
     publishedAt: string;
     tags: string[];
-    type: string;
-    url: string;
     urlToImage: string;
 }

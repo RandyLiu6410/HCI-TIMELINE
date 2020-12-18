@@ -5,7 +5,8 @@ import Header from '../../components/Header/header.component';
 import CustomText from '../../components/CustomText/customText.component';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import TimelineLayout from '../timeline/timeline.layout'
+import TimelineLayout from '../timeline/timeline.layout';
+import NewsLayout from '../news/news.layout';
 
 export interface TagsLayoutProps {
     tags: string[];
@@ -69,6 +70,7 @@ const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
         }}>
             <Stack.Screen name="Tag" component={TagScreen} />
             <Stack.Screen name="Timeline" component={TimelineLayout} />
+            <Stack.Screen name="News" component={NewsLayout} />
         </Stack.Navigator>
     );
 }

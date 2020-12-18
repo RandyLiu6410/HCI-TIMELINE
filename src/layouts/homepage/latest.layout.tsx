@@ -57,19 +57,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     const [newsData, setNewsData] = React.useState([]);
     const [news, setNews] = React.useState(DATA[0]);
     const [notification, setNotification] = React.useState('');
-
-    const renderItem = DATA.map((item, index) => {
-    return <MainCard
-        key={index}
-        news={item}
-        sheetRef={tagSheetRef}
-        tagOnPress={(_news: NewsModel) => {
-            setNews(_news);
-            tagSheetRef.current.snapTo(0);
-        }}
-        onPress={props.cardOnPress}
-    />
-    })
+    const [startIndex, setStartIndex] = React.useState(0);
 
     if (!isReady) {
         return (
@@ -83,8 +71,29 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
 
     return(
         <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {renderItem}
+            <ScrollView 
+                scrollEventThrottle={400}
+                onScroll={({nativeEvent}) => {
+                    if (isCloseToBottom(nativeEvent)) {
+                        _cacheResourcesAsync();
+                    }
+                }}
+                showsVerticalScrollIndicator={false}
+            >
+                {
+                    newsData.map((item, index) => {
+                        return <MainCard
+                            key={index}
+                            news={item}
+                            sheetRef={tagSheetRef}
+                            tagOnPress={(_news: NewsModel) => {
+                                setNews(_news);
+                                tagSheetRef.current.snapTo(0);
+                            }}
+                            onPress={props.cardOnPress}
+                        />
+                    })
+                }
             </ScrollView>
             <TagPopUp 
                 sheetRef={tagSheetRef}
@@ -100,13 +109,29 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     );
 
     async function _cacheResourcesAsync() {
-        const cacheNews = await fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=7661e34fadc44d65a89f278abd0e5907')
-        .then((res) => res.json())
+        const cacheNews = await fetch(`http://localhost:8080/news/?sort=descending&startIndex=${startIndex}&limit=20`)
+        .then((res) => {
+            return res.json();
+        })
         
-        setNewsData(cacheNews.articles);
+        if(newsData.length === 0)
+        {
+            setNewsData(cacheNews);
+        }
+        else
+        {
+            setNewsData(newsData.concat(cacheNews));
+        }
 
+        setStartIndex(startIndex + 20);
         return cacheNews;
-      }
+    }
+
+    function isCloseToBottom({layoutMeasurement, contentOffset, contentSize}) {
+        const paddingToBottom = 20;
+        return layoutMeasurement.height + contentOffset.y >=
+            contentSize.height - paddingToBottom;
+    };
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { AppLoading } from 'expo';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import NewsModel from '../../model/news.model';
 import SimpleCard from '../Card/SimpleCard/simpleCard.component';
 import SlideCard from '../Card/SlideCard/slideCard.component';
@@ -52,11 +53,24 @@ const DATA = [
 
 export interface TimelineProps {
     // news: NewsModel;
+    tag: string;
+    cardOnPress: any;
 }
 
 const Timeline: React.FC<TimelineProps> = (props) => {
+    const [isReady, setIsReady] = React.useState(false);
     const [data, setData] = React.useState(DATA);
     const [selected, setSelected] = React.useState(data[0]);
+
+    if (!isReady) {
+        return (
+            <AppLoading
+              startAsync={_cacheResourcesAsync}
+              onFinish={() => setIsReady(true)}
+              onError={console.warn}
+            />
+        )
+    }
 
     function onEventPress(data){
         setSelected(data);
@@ -81,10 +95,9 @@ const Timeline: React.FC<TimelineProps> = (props) => {
 
     function renderDetail(rowData: NewsModel) {
         return (
-            rowData.id == "2" ? 
-            <SlideCard />
-            :
-            <SimpleCard news={rowData}/>
+            <TouchableOpacity onPress={() => props.cardOnPress(rowData)}>
+                <SimpleCard news={rowData}/>
+            </TouchableOpacity>
         )
     }
 
@@ -99,7 +112,7 @@ const Timeline: React.FC<TimelineProps> = (props) => {
                 circleColor='#FFFFFF'
                 lineColor='#FFFFFF'
                 innerCircle={'dot'}
-                timeContainerStyle={{minWidth:52, marginTop: -5}}
+                timeContainerStyle={{width:52, marginTop: -5}}
                 options={{
                     style:{ 
                         paddingTop:5,
@@ -116,6 +129,17 @@ const Timeline: React.FC<TimelineProps> = (props) => {
             />
         </View>
     );
+
+    async function _cacheResourcesAsync() {
+        const cacheNews = await fetch(`http://localhost:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=0&limit=20`)
+        .then((res) => {
+            return res.json();
+        })
+        
+        setData(cacheNews);
+
+        return cacheNews;
+    }
 }
 
 const styles = StyleSheet.create({

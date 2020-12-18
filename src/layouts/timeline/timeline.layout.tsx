@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View, Image, SafeAreaView, ScrollView, TouchableOpacity, Button } from 'react-native';
 import Timeline from '../../components/Timeline/timeline.component';
+import { useNavigation } from '@react-navigation/native';
 
 import Header from '../../components/Header/header.component';
 import BackIcon from '../../components/Icon/back.component';
@@ -8,13 +9,15 @@ import TextButton from '../../components/Button/textButton.component';
 import SortIcon from '../../components/Icon/sort.component';
 import SortPopUp from '../../components/SortPopUp/sortPopUp.component';
 
+import NewsModel from '../../model/news.model';
+
 export interface TimelineLayoutProps {
     tag: string;
 }
 
 const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     const tag  = props.route.params.tag;
-    const navigation = props.route.params.navigation;
+    const navigation = useNavigation();
     const sortSheetRef = React.useRef(null);
     const [sort, setSort] = React.useState('new');
     // console.log(tag)
@@ -43,7 +46,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                     <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
                 </View>
             </View>
-            <Timeline />
+            <Timeline tag={tag} cardOnPress={(news: NewsModel) => navigation.navigate('News', { news: news })}/>
             <SortPopUp
                 sheetRef={sortSheetRef}
                 sortChanged={(status)=>{

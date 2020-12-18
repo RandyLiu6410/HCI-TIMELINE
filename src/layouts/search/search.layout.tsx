@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Header from '../../components/Header/header.component';
 import { SearchBar } from 'react-native-elements';
 // import { color } from 'react-native-reanimated';
 import TextButton from '../../components/Button/textButton.component';
 import MoreIcon from '../../components/Icon/more.component';
+import SearchCard from '../../components/Card/SearchCard/searchCard.component';
+
+import NewsLayout from '../news/news.layout';
 
 export interface SearchLayoutProps {
     tagHistory: string[];
@@ -13,14 +17,14 @@ export interface SearchLayoutProps {
     // showMore: () => void;
 }
 
-const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
+function SearchScreen({ navigation }) {
     const [search, changeText] = React.useState('');
     const [more, setMore] = React.useState(false);
+    const [result, setResult] = React.useState([]);
+    const [startIndex, setStartIndex] = React.useState(0);
     const tags = ['US Election', 'Taiwan', 'HK Protest', 'Tokyo Olympic', 'NTU', 'Play Station', 'Election', 'Thailand Protest',
     'Covid-19', 'China', 'Covid-19 Vaccines'];
     const keywords = ['money heist', 'buy mask', 'windows update', 'airpods max'];
-
-    console.log(search)
 
     // function doSearch(search) {
     //     changeText(search)
@@ -28,28 +32,44 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
     
     return(
         <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.scrollView}>
-                <Header
-                    hasChild={true}
-                    child={"SEARCH"}
-                    previous={null}
-                    navigation={null}
-                />
-                <SearchBar
-                    placeholder="Search for keywords or tags"
-                    onChangeText={
-                        search => changeText(search)
+            <Header
+                hasChild={true}
+                child={"SEARCH"}
+                previous={null}
+                navigation={null}
+            />
+            <SearchBar
+                placeholder="Search for keywords or tags"
+                onChangeText={ (search) => {
+                    setResult([]);
+                    changeText(search);
+                }}
+                onSubmitEditing={() => _cacheResourcesAsync()}
+                value={search}
+                // clearIcon={false}
+                containerStyle={styles.searchBarContainer}
+                // inputContainerStyle={styles.inputContainer}
+            />
+            <ScrollView 
+                scrollEventThrottle={400}
+                onScroll={({nativeEvent}) => {
+                    if (isCloseToBottom(nativeEvent)) {
+                        _cacheResourcesAsync();
                     }
-                    value={search}
-                    // clearIcon={false}
-                    containerStyle={styles.searchBarContainer}
-                    // inputContainerStyle={styles.inputContainer}
-                />
+                }}
+                style={styles.scrollView}
+            >
                 <React.Fragment>
                     {
                         search !== '' ? 
                         <View>
-                            
+                            {
+                                result.map(r => {
+                                    return <TouchableOpacity onPress={() => navigation.navigate('News', { news: r })}>
+                                        <SearchCard news={r}/>
+                                    </TouchableOpacity>
+                                })
+                            }
                         </View>
                         :
                         <View>
@@ -99,6 +119,60 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
                 </React.Fragment>
             </ScrollView>
         </SafeAreaView>
+    );
+
+    async function _cacheResourcesAsync() {
+        const cacheNews = await fetch(`http://localhost:8080/news/keywords?keyWord=${search}&sort=descending&startIndex=${startIndex}&limit=20`)
+        .then((res) => {
+            return res.json();
+        })
+        
+        if(result.length === 0)
+        {
+            setResult(cacheNews);
+        }
+        else
+        {
+            setResult(result.concat(cacheNews));
+        }
+        
+        setStartIndex(startIndex + 20);
+
+        return cacheNews;
+    }
+
+    function isCloseToBottom({layoutMeasurement, contentOffset, contentSize}) {
+        const paddingToBottom = 20;
+        return layoutMeasurement.height + contentOffset.y >=
+            contentSize.height - paddingToBottom;
+    };
+}
+
+const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
+    
+    // var tagList = props.tags.map((t, index) => {
+    //     return <GridRow key={index} tagName={t}/>
+    // })
+    const Stack = createStackNavigator();
+    
+    return(
+        <Stack.Navigator screenOptions={{
+            header: ({ scene, previous, navigation }) => {
+                return (
+                    // <Header
+                    //     hasChild={true}
+                    //     child={"TAGs"}
+                    //     previous={previous}
+                    //     navigation={navigation}
+                    // />
+                    <></>
+                );
+                
+            }
+        }}>
+            <Stack.Screen name="Search" component={SearchScreen} />
+            <Stack.Screen name="News" component={NewsLayout} />
+        </Stack.Navigator>
     );
 }
 
