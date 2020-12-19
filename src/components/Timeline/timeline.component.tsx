@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppLoading } from 'expo';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import NewsModel from '../../model/news.model';
 import SimpleCard from '../Card/SimpleCard/simpleCard.component';
 import SlideCard from '../Card/SlideCard/slideCard.component';
@@ -60,7 +60,10 @@ export interface TimelineProps {
 const Timeline: React.FC<TimelineProps> = (props) => {
     const [isReady, setIsReady] = React.useState(false);
     const [data, setData] = React.useState(DATA);
+    const [startIndex, setStartIndex] = React.useState(0);
     const [selected, setSelected] = React.useState(data[0]);
+    const [isRefreshing, setIsRefreshing] = React.useState(false);
+    const [isWaiting, setIsWaiting] = React.useState(false);
 
     if (!isReady) {
         return (
@@ -73,8 +76,23 @@ const Timeline: React.FC<TimelineProps> = (props) => {
     }
 
     function onEventPress(data){
-        setSelected(data);
+        props.cardOnPress(data)
     }
+
+    function onRefresh(){
+        setIsRefreshing(true);
+        
+        setIsRefreshing(false);
+    }
+
+    function onEndReached() {
+        if (!isWaiting) {
+            setIsWaiting(true);
+    
+            _cacheResourcesAsync()
+            .then(() => setIsWaiting(false));
+        }
+      }
 
     function renderTime(rowData: NewsModel) {
         const time = new Date(rowData.publishedAt);
@@ -85,7 +103,7 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         const minutes = time.getMinutes();
         
         return (
-            <View style={{alignItems: 'center'}}>
+            <View style={{alignItems: 'center', width: 50}}>
                 <Text style={styles.year}>{year}/</Text>
                 <Text style={styles.date}>{month}/{date}</Text>
                 <Text style={styles.time}>{hours < 10 ? '0'+hours.toString() : hours }:{minutes < 10 ? '0'+minutes.toString() : minutes}</Text>
@@ -95,10 +113,18 @@ const Timeline: React.FC<TimelineProps> = (props) => {
 
     function renderDetail(rowData: NewsModel) {
         return (
-            <TouchableOpacity onPress={() => props.cardOnPress(rowData)}>
+            // <TouchableOpacity onPress={() => props.cardOnPress(rowData)}>
                 <SimpleCard news={rowData}/>
-            </TouchableOpacity>
+            // </TouchableOpacity>
         )
+    }
+
+    function renderFooter() {
+        if (isWaiting) {
+            return <ActivityIndicator />;
+        } else {
+            return <Text>~</Text>;
+        }
     }
 
     return(
@@ -116,9 +142,17 @@ const Timeline: React.FC<TimelineProps> = (props) => {
                 options={{
                     style:{ 
                         paddingTop:5,
-                    }
+                    },
+                    refreshControl: (
+                        <RefreshControl
+                          refreshing={isRefreshing}
+                          onRefresh={onRefresh}
+                        />
+                    ),
+                    renderFooter: renderFooter,
+                    onEndReached: onEndReached
                 }}
-                // onEventPress={onEventPress}
+                onEventPress={onEventPress}
                 renderTime={renderTime}
                 renderDetail={renderDetail}
                 rowContainerStyle={{
@@ -131,12 +165,21 @@ const Timeline: React.FC<TimelineProps> = (props) => {
     );
 
     async function _cacheResourcesAsync() {
-        const cacheNews = await fetch(`http://localhost:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=0&limit=20`)
+        const cacheNews = await fetch(`http://localhost:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
         })
         
-        setData(cacheNews);
+        if(data.length === 0)
+        {
+            setData(cacheNews);
+        }
+        else
+        {
+            setData(data.concat(cacheNews));
+        }
+        
+        setStartIndex(startIndex + 20);
 
         return cacheNews;
     }

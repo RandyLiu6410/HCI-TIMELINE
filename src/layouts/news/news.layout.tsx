@@ -16,15 +16,16 @@ const win = Dimensions.get('window');
 const ratio = win.width / 540;
 
 export interface NewsLayoutProps {
-    value: object;
+    news: NewsModel;
 }
 
-function NewsScreen({ news, tagOnPress }: {news: NewsModel}) {
-    // const news: NewsModel = props.route.params.news;
+const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
+    const news: NewsModel = props.route.params.news;
     const time = (new Date()).getTime() - (new Date(news.publishedAt)).getTime();
     const tagSheetRef = React.useRef(null);
     const notificationSheetRef = React.useRef(null);
     const [notification, setNotification] = React.useState('');
+    const navigation = useNavigation();
 
     return(
         <View style={styles.container}>
@@ -45,7 +46,7 @@ function NewsScreen({ news, tagOnPress }: {news: NewsModel}) {
                 <View style={styles.tags}>
                 {
                     news.tags.map((t, index) => {
-                        return <TouchableOpacity onPress={() => tagOnPress(t)}>
+                        return <TouchableOpacity onPress={() => navigation.navigate('Timeline', { tag: t })}>
                         <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} paddingHorizontal={10} 
                         marginTop={11} marginRight={2}/>
                         </TouchableOpacity>
@@ -70,26 +71,25 @@ function NewsScreen({ news, tagOnPress }: {news: NewsModel}) {
     );
 }
 
-const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
-    const Stack = createStackNavigator();
+// const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
+//     const Stack = createStackNavigator();
+//     const [news, setNews] = React.useState(props.route.params.news);
 
-    function newsScreenComponent() {
-        const navigation = useNavigation();
+//     React.useEffect(() => {
+//         setNews(props.route.params.news);
+//     }, [props.route.params.news])
 
-        return <NewsScreen news={props.route.params.news} tagOnPress={(tag: string) => navigation.navigate('Timeline', { tag: tag })}/>;
-    };
-
-    return(
-        <Stack.Navigator screenOptions={{
-            header: ({ scene, previous, navigation }) => {
-                return null;
-            }
-        }}>
-            <Stack.Screen name="Home" component={newsScreenComponent} />
-            <Stack.Screen name="Timeline" component={TimelineLayout} />
-        </Stack.Navigator>
-    );
-}
+//     return(
+//         <Stack.Navigator screenOptions={{
+//             header: ({ scene, previous, navigation }) => {
+//                 return null;
+//             }
+//         }}>
+//             <Stack.Screen name="NewsPage" component={() => <NewsScreen news={news}/>} />
+//             <Stack.Screen name="Timeline" component={TimelineLayout} />
+//         </Stack.Navigator>
+//     );
+// }
 
 const styles = StyleSheet.create({
     container: {

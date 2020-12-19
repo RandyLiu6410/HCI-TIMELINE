@@ -10,6 +10,7 @@ import MoreIcon from '../../components/Icon/more.component';
 import SearchCard from '../../components/Card/SearchCard/searchCard.component';
 
 import NewsLayout from '../news/news.layout';
+import TimelineLayout from '../timeline/timeline.layout';
 
 export interface SearchLayoutProps {
     tagHistory: string[];
@@ -172,6 +173,7 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
         }}>
             <Stack.Screen name="Search" component={SearchScreen} />
             <Stack.Screen name="News" component={NewsLayout} />
+            <Stack.Screen name="Timeline" component={TimelineLayout} />
         </Stack.Navigator>
     );
 }

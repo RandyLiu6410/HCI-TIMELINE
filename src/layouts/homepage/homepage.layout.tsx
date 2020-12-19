@@ -12,6 +12,7 @@ import LocalsLayout from './locals.layout';
 import WorldLayout from './world.layout';
 
 import NewsLayout from '../news/news.layout';
+import TimelineLayout from '../timeline/timeline.layout';
 
 import NewsModel from '../../model/news.model';
 import LinearGradient from 'react-native-linear-gradient';
@@ -68,6 +69,7 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
         }}>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="News" component={NewsLayout} />
+            <Stack.Screen name="Timeline" component={TimelineLayout} />
         </Stack.Navigator>
     );
 }
