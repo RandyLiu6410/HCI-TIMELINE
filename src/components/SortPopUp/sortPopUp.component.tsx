@@ -49,14 +49,6 @@ const SortPopUp: React.FC<SortPopUpProps> = (props) => {
         borderRadius={10}
         renderContent={renderContent}
         initialSnap={1}
-        onOpenStart={() => {
-        //   setTags(props.news.tags);
-          console.log('click')
-        }}
-        onCloseEnd={() => {
-        //   onChangeText('');
-          // sheetRef.current.snapTo(1);
-        }}
       />
     );
 }

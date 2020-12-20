@@ -17,6 +17,8 @@ import TimelineLayout from '../timeline/timeline.layout';
 import NewsModel from '../../model/news.model';
 import LinearGradient from 'react-native-linear-gradient';
 
+import UserContext from '../../services/UserContext';
+
 export interface HomepageLayoutProps {
     // items: object[];
 }
@@ -24,7 +26,63 @@ export interface HomepageLayoutProps {
 function HomeScreen({ navigation }) {
     const Tab = createMaterialTopTabNavigator();
     function latestLayoutComponent() {
-        return <LatestLayout cardOnPress={(news: NewsModel) => navigation.navigate('News', { news: news })}/>;
+        return (
+        <UserContext.Consumer>
+          {user => (
+            <LatestLayout 
+            user={user}
+            cardOnPress={(news: NewsModel) => {
+                navigation.navigate('News', { news: news, user: user });
+                addHistory(user.name, news.url);
+            }}/>
+          )}
+        </UserContext.Consumer>
+        );
+    };
+
+    function followingLayoutComponent() {
+        return (
+        <UserContext.Consumer>
+          {user => (
+            <FollowingLayout 
+            user={user}
+            cardOnPress={(news: NewsModel) => {
+                navigation.navigate('News', { news: news, user: user });
+                addHistory(user.name, news.url);
+            }}/>
+          )}
+        </UserContext.Consumer>
+        );
+    };
+
+    function localsLayoutComponent() {
+        return (
+        <UserContext.Consumer>
+          {user => (
+            <LocalsLayout 
+            user={user}
+            cardOnPress={(news: NewsModel) => {
+                navigation.navigate('News', { news: news, user: user });
+                addHistory(user.name, news.url);
+            }}/>
+          )}
+        </UserContext.Consumer>
+        );
+    };
+
+    function worldLayoutComponent() {
+        return (
+        <UserContext.Consumer>
+          {user => (
+            <WorldLayout 
+            user={user}
+            cardOnPress={(news: NewsModel) => {
+                navigation.navigate('News', { news: news, user: user });
+                addHistory(user.name, news.url);
+            }}/>
+          )}
+        </UserContext.Consumer>
+        );
     };
 
     return (
@@ -43,12 +101,23 @@ function HomeScreen({ navigation }) {
                 // }}
             >
                 <Tab.Screen name="Latest" component={latestLayoutComponent}/>
-                <Tab.Screen name="Following" component={FollowingLayout} />
-                <Tab.Screen name="Locals" component={LocalsLayout} />
-                <Tab.Screen name="World" component={WorldLayout} />
+                <Tab.Screen name="Following" component={followingLayoutComponent} />
+                <Tab.Screen name="Locals" component={localsLayoutComponent} />
+                <Tab.Screen name="World" component={worldLayoutComponent} />
             </Tab.Navigator>
         </View>
     );
+
+    async function addHistory(username: string, url: string) {
+        await fetch(`http://54.226.5.241:8080/user/history?username=${username}&url=${url}`, {
+          method: 'POST'
+        })
+        .then((res) => {
+            res.json().then(m => console.log(m));
+        })
+        .catch((err) => {
+        })
+    }
 }
 
 const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {

@@ -10,15 +10,19 @@ import NewsModel from '../../model/news.model';
 export interface TagPopUpProps {
   sheetRef: React.MutableRefObject<null>;
   news: NewsModel;
+  followingTags: any;
   tagAdded: (arg0: string) => void;
 }
 
 const TagPopUp: React.FC<TagPopUpProps> = (props) => {
-    const [tags, setTags] = React.useState(props.news.tags);
     const [value, onChangeText] = React.useState("");
 
     var tagsView = props.news.tags.map((t, index) => {
-      return <GridRow key={index} tagName={t}/>
+      return <GridRow 
+      key={index} 
+      tagName={t} 
+      following={props.followingTags.filter(tag => tag.tag === t).length > 0}
+      onPress={props.tagAdded}/>
     })
 
     const renderContent = () => (
@@ -41,7 +45,7 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
                 value={value}/>
                 {
                   value !== "" ? 
-                  <ConfirmIcon onPress={() => props.tagAdded(value)} size={24} color="white"/>
+                  <ConfirmIcon onPress={() => props.tagAdded(`The news has been added to ${value}`)} size={24} color="white"/>
                   :
                   <View />
                 }
@@ -57,14 +61,6 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
         borderRadius={10}
         renderContent={renderContent}
         initialSnap={2}
-        onOpenStart={() => {
-          setTags(props.news.tags);
-          console.log('click')
-        }}
-        onCloseEnd={() => {
-          onChangeText('');
-          // sheetRef.current.snapTo(1);
-        }}
       />
     );
 }

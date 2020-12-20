@@ -17,6 +17,7 @@ const ratio = win.width / 540;
 
 export interface NewsLayoutProps {
     news: NewsModel;
+    user: {name: string};
 }
 
 const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
@@ -46,7 +47,7 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                 <View style={styles.tags}>
                 {
                     news.tags.map((t, index) => {
-                        return <TouchableOpacity onPress={() => navigation.navigate('Timeline', { tag: t })}>
+                        return <TouchableOpacity onPress={() => navigation.navigate('Timeline', { tag: t, user: props.user })}>
                         <TextButton key={index} text={'# ' + t} fontSize={10} paddingVertical={3} paddingHorizontal={10} 
                         marginTop={11} marginRight={2}/>
                         </TouchableOpacity>

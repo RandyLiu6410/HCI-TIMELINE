@@ -6,7 +6,7 @@ import TextButton from '../Button/textButton.component';
 
 export interface NotificationProps {
     sheetRef: React.MutableRefObject<null>;
-    tagName: string;
+    message: string;
 }
 
 const Notification: React.FC<NotificationProps> = (props) => {
@@ -14,8 +14,8 @@ const Notification: React.FC<NotificationProps> = (props) => {
         <View
           style={styles.container}
         >
-          <Text style={styles.text}>The news has been added to "{props.tagName}"</Text>
-          <TextButton text="VIEW" fontSize={12} paddingVertical={10} paddingHorizontal={10} marginTop={0} marginRight={2}/>
+          <Text style={styles.text}>{props.message}</Text>
+          {/* <TextButton text="VIEW" fontSize={12} paddingVertical={10} paddingHorizontal={10} marginTop={0} marginRight={2}/> */}
         </View>
       );
 

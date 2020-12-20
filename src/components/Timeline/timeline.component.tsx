@@ -52,16 +52,17 @@ const DATA = [
   ];
 
 export interface TimelineProps {
-    // news: NewsModel;
     tag: string;
     cardOnPress: any;
+    user: {name: string};
+    followtime: string;
 }
 
 const Timeline: React.FC<TimelineProps> = (props) => {
     const [isReady, setIsReady] = React.useState(false);
-    const [data, setData] = React.useState(DATA);
+    const [data, setData] = React.useState([]);
+    const [sorteddata, setSorteddata] = React.useState([]);
     const [startIndex, setStartIndex] = React.useState(0);
-    const [selected, setSelected] = React.useState(data[0]);
     const [isRefreshing, setIsRefreshing] = React.useState(false);
     const [isWaiting, setIsWaiting] = React.useState(false);
 
@@ -94,7 +95,7 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         }
       }
 
-    function renderTime(rowData: NewsModel) {
+    function renderTime(rowData) {
         const time = new Date(rowData.publishedAt);
         const year = time.getFullYear();
         const month = time.getMonth() + 1;
@@ -111,12 +112,22 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         )
     }
 
-    function renderDetail(rowData: NewsModel) {
-        return (
-            // <TouchableOpacity onPress={() => props.cardOnPress(rowData)}>
-                <SimpleCard news={rowData}/>
-            // </TouchableOpacity>
-        )
+    function renderDetail(rowData) {
+        if(rowData.data)
+        {
+            return (
+                <SlideCard news={rowData.data} cardOnPress={props.cardOnPress}/>
+                // <SimpleCard news={rowData.data[0]}/>
+            )
+        }
+        else
+        {
+            return (
+                <TouchableOpacity onPress={() => props.cardOnPress(rowData)}>
+                    <SimpleCard news={rowData}/>
+                </TouchableOpacity>
+            )
+        }
     }
 
     function renderFooter() {
@@ -131,7 +142,7 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         <View style={styles.container}>
             <TimelineList 
                 style={styles.list}
-                data={data}
+                data={sorteddata}
                 circleSize={18}
                 dotSize={10}
                 dotColor='#000000'
@@ -152,7 +163,7 @@ const Timeline: React.FC<TimelineProps> = (props) => {
                     renderFooter: renderFooter,
                     onEndReached: onEndReached
                 }}
-                onEventPress={onEventPress}
+                // onEventPress={onEventPress}
                 renderTime={renderTime}
                 renderDetail={renderDetail}
                 rowContainerStyle={{
@@ -165,18 +176,75 @@ const Timeline: React.FC<TimelineProps> = (props) => {
     );
 
     async function _cacheResourcesAsync() {
-        const cacheNews = await fetch(`http://localhost:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=${startIndex}&limit=20`)
+        const cacheNews = await fetch(`http://54.226.5.241:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
-        })
-        
-        if(data.length === 0)
+        });
+
+        if(props.followtime)
         {
-            setData(cacheNews);
+            const cacheHistory = await fetch(`http://54.226.5.241:8080/user/history?username=${props.user.name}`)
+            .then((res) => {
+                return res.json();
+            });
+
+            const indexes = cacheHistory.map(h => {
+                return cacheNews.findIndex(n => n.url === h);
+            })
+            .filter(i => i >= 0)
+            .sort((a, b) => {
+                return a - b;
+            });
+
+            var data_sort = [];
+
+            var start = 0;
+            const end = cacheNews.length;
+
+            indexes.map((i, index) => {
+                if(i === start)
+                {
+                    data_sort.push(cacheNews[i]);
+                }
+                else
+                {
+                    data_sort.push({
+                        publishedAt: cacheNews[start].publishedAt,
+                        data: cacheNews.slice(start, i)
+                    });
+                    data_sort.push(cacheNews[i]);
+                }
+
+                start = i + 1;
+            })
+
+            if(indexes[indexes.length - 1] !== end - 1)
+            {
+                data_sort.push({
+                    publishedAt: cacheNews[indexes[indexes.length - 1] + 1].publishedAt,
+                    data: cacheNews.slice(indexes[indexes.length - 1] + 1, end)
+                });
+            }
+
+            if(sorteddata.length === 0)
+            {
+                setSorteddata(data_sort);
+            }
+            else
+            {
+                setSorteddata(sorteddata.concat(data_sort));
+            }
         }
         else
         {
-            setData(data.concat(cacheNews));
+            if(sorteddata.length === 0)
+            {
+                setSorteddata(cacheNews);
+            }
+            else
+            {
+                setSorteddata(sorteddata.concat(cacheNews));
+            }
         }
         
         setStartIndex(startIndex + 20);

@@ -14,13 +14,8 @@ import HomepageLayout from './src/layouts/homepage/homepage.layout';
 import TagsLayout from './src/layouts/tags/tags.layout';
 import SearchLayout from './src/layouts/search/search.layout';
 import ProfileLayout from './src/layouts/profile/profile.layout';
-import TimelineLayout from './src/layouts/timeline/timeline.layout';
 
-import Header from './src/components/Header/header.component';
-import TabBar from './src/components/TabBar/tabBar.component';
-import NavigationBar from './src/components/NavigationBar/navigationBar.component';
-import TagPopUp from './src/components/TagPopUp/tagPopUp.component';
-import MainCard from './src/components/Card/MainCard/mainCard.component';
+import UserContext from './src/services/UserContext';
 
 const Theme = {
   ...DefaultTheme,
@@ -196,11 +191,11 @@ const Login: React.FC<LoginProps> = (props) => {
   }
 
   async function login() {
-    await fetch(`http://localhost:8080/user/login?username=${username}&password=${password}`, {
+    await fetch(`http://54.226.5.241:8080/user/login?username=${username}&password=${password}`, {
       method: 'POST'
     })
     .then((res) => {
-      props.login(res.ok);
+      props.login(res.ok, username);
       res.json().then((m) => setMessage(m));
     })
     .catch((err) => {
@@ -208,7 +203,7 @@ const Login: React.FC<LoginProps> = (props) => {
   }
 
   async function signup() {
-    await fetch(`http://localhost:8080/user?username=${username_su}&password=${password_su}`, {
+    await fetch(`http://54.226.5.241:8080/user?username=${username_su}&password=${password_su}`, {
       method: 'POST'
     })
     .then((res) => {
@@ -226,13 +221,23 @@ const Login: React.FC<LoginProps> = (props) => {
 
 export default function App() {
   const [authorized, setAuthorized] = React.useState(false);
+  const [username, setUsername] = React.useState('');
 
   if(authorized)
   {
-    return(<Home />)
+    return(
+    <UserContext.Provider value={{
+      name: username
+    }}>
+      <Home />
+    </UserContext.Provider>
+    )
   }
   else{
-    return(<Login login={(auth: boolean) => {setAuthorized(auth)}}/>)
+    return(<Login login={(auth: boolean, _username: string) => {
+      setAuthorized(auth);
+      setUsername(_username);
+    }}/>)
   }
 }
 

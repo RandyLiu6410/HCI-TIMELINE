@@ -12,6 +12,8 @@ import SearchCard from '../../components/Card/SearchCard/searchCard.component';
 import NewsLayout from '../news/news.layout';
 import TimelineLayout from '../timeline/timeline.layout';
 
+import UserContext from '../../services/UserContext';
+
 export interface SearchLayoutProps {
     tagHistory: string[];
     history: string[];
@@ -32,98 +34,105 @@ function SearchScreen({ navigation }) {
     // }
     
     return(
-        <SafeAreaView style={styles.container}>
-            <Header
-                hasChild={true}
-                child={"SEARCH"}
-                previous={null}
-                navigation={null}
-            />
-            <SearchBar
-                placeholder="Search for keywords or tags"
-                onChangeText={ (search) => {
-                    setResult([]);
-                    changeText(search);
-                }}
-                onSubmitEditing={() => _cacheResourcesAsync()}
-                value={search}
-                // clearIcon={false}
-                containerStyle={styles.searchBarContainer}
-                // inputContainerStyle={styles.inputContainer}
-            />
-            <ScrollView 
-                scrollEventThrottle={400}
-                onScroll={({nativeEvent}) => {
-                    if (isCloseToBottom(nativeEvent)) {
-                        _cacheResourcesAsync();
-                    }
-                }}
-                style={styles.scrollView}
-            >
-                <React.Fragment>
-                    {
-                        search !== '' ? 
-                        <View>
-                            {
-                                result.map(r => {
-                                    return <TouchableOpacity onPress={() => navigation.navigate('News', { news: r })}>
-                                        <SearchCard news={r}/>
-                                    </TouchableOpacity>
-                                })
-                            }
-                        </View>
-                        :
-                        <View>
-                            <Text style={styles.history}>History</Text>
-                            <View style={styles.tags}>
-                            {    
-                                more ? 
-                                tags.map((t, index) => {
-                                    return (
-                                    <TouchableOpacity onPress={()=>changeText(t)}>
-                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
-                                        marginLeft={''} marginRight={0}/>
-                                    </TouchableOpacity>
-                                    )
-                                })
-                                :
-                                tags.slice(0,5).map((t, index) => {
-                                    return (
-                                    <TouchableOpacity onPress={()=>changeText(t)}>
-                                        <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
-                                        marginLeft={''} marginRight={0}/>
-                                    </TouchableOpacity>
-                                    )
-                                })
-                            }
-                            {   
-                                more ?
-                                <></>
-                                :
-                                <TouchableOpacity onPress={()=>{setMore(true)}}>
-                                    <MoreIcon size={20} color={'#C4C4C4'}></MoreIcon>
-                                </TouchableOpacity>
-                            }
+        <UserContext.Consumer>
+        {user => (
+            <SafeAreaView style={styles.container}>
+                <Header
+                    hasChild={true}
+                    child={"SEARCH"}
+                    previous={null}
+                    navigation={null}
+                />
+                <SearchBar
+                    placeholder="Search for keywords or tags"
+                    onChangeText={ (search) => {
+                        setResult([]);
+                        changeText(search);
+                    }}
+                    onSubmitEditing={() => _cacheResourcesAsync()}
+                    value={search}
+                    // clearIcon={false}
+                    containerStyle={styles.searchBarContainer}
+                    // inputContainerStyle={styles.inputContainer}
+                />
+                <ScrollView 
+                    scrollEventThrottle={400}
+                    onScroll={({nativeEvent}) => {
+                        if (isCloseToBottom(nativeEvent)) {
+                            _cacheResourcesAsync();
+                        }
+                    }}
+                    style={styles.scrollView}
+                >
+                    <React.Fragment>
+                        {
+                            search !== '' ? 
+                            <View>
+                                {
+                                    result.map(r => {
+                                        return <TouchableOpacity onPress={() => {
+                                            navigation.navigate('News', { news: r });
+                                            addHistory(user.name, r.url);
+                                        }}>
+                                            <SearchCard news={r}/>
+                                        </TouchableOpacity>
+                                    })
+                                }
                             </View>
-                            {    
-                                keywords.map((t, index) => {
-                                    return (
-                                    <TouchableOpacity style={styles.keywordWrapper} onPress={()=>changeText(t)}>
-                                        <Text key={index} style={styles.keyword}>{t}</Text>
+                            :
+                            <View>
+                                <Text style={styles.history}>History</Text>
+                                <View style={styles.tags}>
+                                {    
+                                    more ? 
+                                    tags.map((t, index) => {
+                                        return (
+                                        <TouchableOpacity onPress={()=>changeText(t)}>
+                                            <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
+                                            marginLeft={''} marginRight={0}/>
+                                        </TouchableOpacity>
+                                        )
+                                    })
+                                    :
+                                    tags.slice(0,5).map((t, index) => {
+                                        return (
+                                        <TouchableOpacity onPress={()=>changeText(t)}>
+                                            <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
+                                            marginLeft={''} marginRight={0}/>
+                                        </TouchableOpacity>
+                                        )
+                                    })
+                                }
+                                {   
+                                    more ?
+                                    <></>
+                                    :
+                                    <TouchableOpacity onPress={()=>{setMore(true)}}>
+                                        <MoreIcon size={20} color={'#C4C4C4'}></MoreIcon>
                                     </TouchableOpacity>
-                                    )
-                                })
-                            }
-                        </View>
-                    }
+                                }
+                                </View>
+                                {    
+                                    keywords.map((t, index) => {
+                                        return (
+                                        <TouchableOpacity style={styles.keywordWrapper} onPress={()=>changeText(t)}>
+                                            <Text key={index} style={styles.keyword}>{t}</Text>
+                                        </TouchableOpacity>
+                                        )
+                                    })
+                                }
+                            </View>
+                        }
 
-                </React.Fragment>
-            </ScrollView>
-        </SafeAreaView>
+                    </React.Fragment>
+                </ScrollView>
+            </SafeAreaView>
+        )}
+        </UserContext.Consumer>
     );
 
     async function _cacheResourcesAsync() {
-        const cacheNews = await fetch(`http://localhost:8080/news/keywords?keyWord=${search}&sort=descending&startIndex=${startIndex}&limit=20`)
+        const cacheNews = await fetch(`http://54.226.5.241:8080/news/keywords?keyWord=${search}&sort=descending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
         })
@@ -147,6 +156,17 @@ function SearchScreen({ navigation }) {
         return layoutMeasurement.height + contentOffset.y >=
             contentSize.height - paddingToBottom;
     };
+
+    async function addHistory(username: string, url: string) {
+        await fetch(`http://54.226.5.241:8080/user/history?username=${username}&url=${url}`, {
+          method: 'POST'
+        })
+        .then((res) => {
+            res.json().then(m => console.log(m));
+        })
+        .catch((err) => {
+        })
+    }
 }
 
 const SearchLayout: React.FC<SearchLayoutProps> = (props) => {

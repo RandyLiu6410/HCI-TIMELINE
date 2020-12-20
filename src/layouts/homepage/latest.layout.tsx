@@ -19,33 +19,11 @@ const DATA = [
         type: 'politics',
         url: "https://www.politico.com/news/2020/12/13/vandals-black-churches-washington-dc-444940",
         urlToImage: "https://static.politico.com/ab/61/f11f8c744bd29626c37bd5e812c1/20201213-trump-protests-gty-773.jpg",
-    },
-    {
-        id: "2",
-        source: "Reuters",
-        title: "Thousands of Thai protesters call for removal of prime minister",
-        content: ["BANGKOK (Reuters) - Thailand’s King Maha Vajiralongkorn told well-wishers of the importance of unity as he marked the opening of a new railway line on Saturday, after thousands of protesters had turned their backs on his motorcade as it passed through central Bangkok.", "Around 2,500 demonstrators had gathered at the capital’s Democracy Monument in the latest of months of protests against Prime Minister Prayuth Chan-ocha, demanding changes to the constitution as well as reforms of the monarchy.", "The protesters draped the centrepiece of the monument, which has become a rallying point for the protests, in a cloth covered in grievances and insults. “Dictatorship be destroyed, democracy shall prosper,” shouted protesters who scaled the three-metre structure.", "As the motorcade carrying the king and Queen Suthida passed by they turned their backs, gave the three-fingered “Hunger Games” salute of pro-democracy campaigners, and sang the national anthem in the latest show of disaffection with the monarchy.", "The king was greeted with a show of support when he arrived at the rail ceremony in the west of the city, where thousands of people had gathered in yellow shirts, waving national flags and chanting “long live the king”.", "“He told me to show children how important the unity of the country is,” said Donnapha Kladbupha, 48, a teacher who posed for selfies with the king.", "The Royal Palace has not commented since the start of the protests, but the king said two weeks ago that the protesters were still loved and that Thailand was a land of compromise.", "“Think well, do good, be hopeful, endure. Have unity in being Thai,” the king wrote on the back of a picture of himself and the queen which had been held up by one supporter.", "The initial focus of protests that began in July was to seek the removal of Prime Minister Prayuth Chan-ocha. But demonstrators have increasingly called for reforms to the monarchy, breaking a long-standing taboo against criticising the institution - an offence punishable with 15 years in jail.", "“Without the people, the government and monarchy will have no power,” said Panusaya Sithijirawattanakul, one of the protest leaders. “Are they willing to take a step back or find a consensus that we can agree on?”"],
-        publishedAt: "2020-12-13T23:13:41Z",
-        tags: ["Thai Protest", "world", "protest"],
-        type: 'politics',
-        url: "https://www.youtube.com/watch?v=URYpn8PbEng",
-        urlToImage: "https://i.ytimg.com/vi/URYpn8PbEng/maxresdefault.jpg",
-    },
-    {
-        id: "3",
-        source: "What’s on Netflix",
-        title: "‘Money Heist’ Season 5: Netflix Release Date & What to Expect",
-        content: ["The international Netflix phenomenon, Money Heist (also known as La Casa De Papel) is officially returning for a fifth and final season on Netflix at some point in 2021. Here’s the latest and everything we know so far about Money Heist season 5, including the path to renewal, its potential release date, production updates, and why we won’t be getting a season 6.", "Money Hiest currently holds the current record of being the most-watched non-English title on Netflix. Once again for the fourth season, the series smashed all of the previous records it set. The fourth part of Money Heist managed to rack up an incredible 65 million views.", "Before we move onto what we know about season 5, you should check out the accompanying documentary released on April 3rd, 2020 called Money Heist: The Phenomenon. It documents the meteoric rise of the series with guests including Ted Sarandos as well as much of the cast and the creators. It gave us some stunning insights including the fact the show was almost axed.", "Part four of Money Heist was released on Netflix globally on April 3rd, 2020, and consisted of eight episodes."],
-        publishedAt: "2020-12-13T23:01:00Z",
-        tags: ["Netflix", "Money Heist", "God made"],
-        type: 'entertainment',
-        url: "https://www.nytimes.com/2020/12/13/books/john-le-carre-dead.html",
-        urlToImage: "https://static01.nyt.com/images/2019/09/02/obituaries/00carre-toppix/00carre-toppix-facebookJumbo-v2.jpg",
-    },
+    }
   ];
 
 export interface LatestLayoutProps {
-    // items: object[];
+    user: {name: string};
     cardOnPress: Function;
 }
 
@@ -55,6 +33,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     const notificationSheetRef = React.useRef(null);
     const [isReady, setIsReady] = React.useState(false);
     const [newsData, setNewsData] = React.useState([]);
+    const [followingTags, setFollowingTags] = React.useState([]);
     const [news, setNews] = React.useState(DATA[0]);
     const [notification, setNotification] = React.useState('');
     const [startIndex, setStartIndex] = React.useState(0);
@@ -62,7 +41,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     if (!isReady) {
         return (
             <AppLoading
-              startAsync={_cacheResourcesAsync}
+              startAsync={() => _cacheResourcesAsync(props.user.name)}
               onFinish={() => setIsReady(true)}
               onError={console.warn}
             />
@@ -75,7 +54,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
                 scrollEventThrottle={400}
                 onScroll={({nativeEvent}) => {
                     if (isCloseToBottom(nativeEvent)) {
-                        _cacheResourcesAsync();
+                        _cacheResourcesAsync(props.user.name);
                     }
                 }}
                 showsVerticalScrollIndicator={false}
@@ -98,18 +77,29 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
             <TagPopUp 
                 sheetRef={tagSheetRef}
                 news={news}
+                followingTags={followingTags}
                 tagAdded={(tagName: string) => {
                     setNotification(tagName);
                     tagSheetRef.current.snapTo(2);
                     notificationSheetRef.current.snapTo(0);
                 }}
             />
-            <Notification sheetRef={notificationSheetRef} tagName={notification}/>
+            <Notification sheetRef={notificationSheetRef} message={notification}/>
         </View>
     );
 
-    async function _cacheResourcesAsync() {
-        const cacheNews = await fetch(`http://localhost:8080/news/?sort=descending&startIndex=${startIndex}&limit=20`)
+    async function _cacheResourcesAsync(username: string) {
+        if(username)
+        {
+            const cacheFollowingTags = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
+            .then((res) => {
+                return res.json();
+            })
+    
+            setFollowingTags(cacheFollowingTags);
+        }
+        
+        const cacheNews = await fetch(`http://54.226.5.241:8080/news/?sort=descending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
         })
@@ -124,6 +114,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
         }
 
         setStartIndex(startIndex + 20);
+
         return cacheNews;
     }
 

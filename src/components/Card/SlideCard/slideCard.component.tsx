@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, Headline } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
 import { scrollInterpolator, animatedStyles } from '../../../utils/animation';
@@ -56,11 +56,12 @@ const DATA = [
   ];
 
 export interface SlideCardProps {
-    // news: NewsModel[];
+    news: NewsModel[];
+    cardOnPress: any;
 }
 
 const SlideCard: React.FC<SlideCardProps> = (props) => {
-    const [data, setData] = React.useState(DATA);
+    const [data, setData] = React.useState(props.news);
     const carouselRef = React.useRef(null);
 
     function renderItem({item, index}: {item: NewsModel, index: number}) {
@@ -68,25 +69,27 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
 
         return (
             <View style={styles.itemContainer}>
-                <Card style={styles.card} >
-                    <View style={styles.content}>
-                        <Card.Content style={{width: '70%'}}>
-                            <Title style={styles.source}>{item.source}</Title>
-                            <Headline style={styles.title}>{item.title}</Headline>
+                <TouchableOpacity onPress={() => props.cardOnPress(item)}>
+                    <Card style={styles.card} >
+                        <View style={styles.content}>
+                            <Card.Content style={{width: '70%'}}>
+                                <Title style={styles.source}>{item.source}</Title>
+                                <Headline style={styles.title}>{item.title}</Headline>
+                            </Card.Content>
+                            <Card.Cover style={styles.image} source={{ uri: item.urlToImage }} />
+                        </View>
+                        <Card.Content style={styles.tags}>
+                            {
+                                item.tags.map((t: string, index: number) => {
+                                    return <Text key={index} style={styles.tag} >{'# ' + t}</Text>
+                                })
+                            }
                         </Card.Content>
-                        <Card.Cover style={styles.image} source={{ uri: item.urlToImage }} />
-                    </View>
-                    <Card.Content style={styles.tags}>
-                        {
-                            item.tags.map((t: string, index: number) => {
-                                return <Text key={index} style={styles.tag} >{'# ' + t}</Text>
-                            })
-                        }
-                    </Card.Content>
-                    <Card.Content style={styles.footer}>
-                        <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
-                    </Card.Content>
-                </Card>
+                        <Card.Content style={styles.footer}>
+                            <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
+                        </Card.Content>
+                    </Card>
+                </TouchableOpacity>
             </View>
         );
     }

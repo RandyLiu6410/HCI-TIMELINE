@@ -8,42 +8,75 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TimelineLayout from '../timeline/timeline.layout';
 import NewsLayout from '../news/news.layout';
 
+import UserContext from '../../services/UserContext';
+import { AppLoading } from 'expo';
+
 export interface TagsLayoutProps {
     tags: string[];
 }
 
 
 function TagScreen({ navigation }) {
-    const tags = ['US Election', 'Taiwan', 'HK Protest', 'Tokyo Olympic', 'NTU', 'Play Station', 'Election'];
-    // const [tag, setTag] = React.useState('');
+    // const tags = ['US Election', 'Taiwan', 'HK Protest', 'Tokyo Olympic', 'NTU', 'Play Station', 'Election'];
+    const [tags, setTags] = React.useState([]);
+    const [isReady, setIsReady] = React.useState(false);
+
+    if (!isReady) {
+        return (
+            <UserContext.Consumer>
+            {user => (
+                <AppLoading
+                    startAsync={() => _cacheResourcesAsync(user.name)}
+                    onFinish={() => setIsReady(true)}
+                    onError={console.warn}
+                />
+            )}
+            </UserContext.Consumer>
+        )
+    }
     
     return(
-        <SafeAreaView style={styles.container}>
-            <Header
-                hasChild={true}
-                child={"TAGs"}
-                previous={null}
-                navigation={navigation}
-            />
-            <ScrollView style={styles.scrollView}>
-                <Text style={styles.title}>Tags You Follow</Text>
-                <View style={styles.content}>
-                    {    
-                        tags.map((t, index) => {
-                            return(
-                                <TouchableOpacity key={index} style={styles.hashWrapper} 
-                                onPress={()=>navigation.navigate('Timeline', {tag: t, navigation: navigation})}>
-                                    <Text style={styles.hash}>{'# '}</Text>
-                                    <Text style={styles.hashContent}>{t}</Text>
-                                </TouchableOpacity>
-                            )
-                        })
-                    }
-                    
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+        <UserContext.Consumer>
+        {user => (
+            <SafeAreaView style={styles.container}>
+                <Header
+                    hasChild={true}
+                    child={"TAGs"}
+                    previous={null}
+                    navigation={navigation}
+                />
+                <ScrollView style={styles.scrollView}>
+                    <Text style={styles.title}>Tags You Follow</Text>
+                    <View style={styles.content}>
+                        {    
+                            tags.map((t, index) => {
+                                return(
+                                    <TouchableOpacity key={index} style={styles.hashWrapper} 
+                                    onPress={()=>navigation.navigate('Timeline', {tag: t.tag, followtime: t.followtime, user: user})}>
+                                        <Text style={styles.hash}>{'# '}</Text>
+                                        <Text style={styles.hashContent}>{t.tag}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+                        
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+        )}
+        </UserContext.Consumer>
     );
+
+    async function _cacheResourcesAsync(username: string) {
+        const cache = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
+        .then((res) => {
+            return res.json();
+        })
+
+        setTags(cache);
+
+        return cache;
+    }
 }
 
 const TagsLayout: React.FC<TagsLayoutProps> = (props) => {

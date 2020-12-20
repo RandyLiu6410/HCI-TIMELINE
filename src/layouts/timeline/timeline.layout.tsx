@@ -12,11 +12,12 @@ import SortPopUp from '../../components/SortPopUp/sortPopUp.component';
 import NewsModel from '../../model/news.model';
 
 export interface TimelineLayoutProps {
-    tag: string;
 }
 
 const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
-    const tag  = props.route.params.tag;
+    const tag = props.route.params.tag;
+    const followtime = props.route.params.followtime;
+    const user = props.route.params.user;
     const navigation = useNavigation();
     const sortSheetRef = React.useRef(null);
     const [sort, setSort] = React.useState('new');
@@ -46,7 +47,10 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                     <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
                 </View>
             </View>
-            <Timeline tag={tag} cardOnPress={(news: NewsModel) => navigation.navigate('News', { news: news })}/>
+            <Timeline tag={tag} followtime={followtime} user={user} cardOnPress={(news: NewsModel) => {
+                navigation.navigate('News', { news: news });
+                addHistory(user.name, news.url);
+            }}/>
             <SortPopUp
                 sheetRef={sortSheetRef}
                 sortChanged={(status)=>{
@@ -55,6 +59,17 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
             }}/>
         </SafeAreaView>
     )
+
+    async function addHistory(username: string, url: string) {
+        await fetch(`http://54.226.5.241:8080/user/history?username=${username}&url=${url}`, {
+          method: 'POST'
+        })
+        .then((res) => {
+            res.json().then(m => console.log(m));
+        })
+        .catch((err) => {
+        })
+    }
 }
 
 const styles = StyleSheet.create({
