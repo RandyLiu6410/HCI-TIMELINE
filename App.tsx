@@ -96,7 +96,17 @@ const Login: React.FC<LoginProps> = (props) => {
   const [confirmpassword_su, setConfirmpassword_su] = React.useState('');
   const [message, setMessage] = React.useState('');
   const [message_su, setMessage_su] = React.useState('');
+  const [color, setColor] = React.useState('gray');
   const sheetRef = React.useRef(null);
+
+  function openBottomSheet() {
+    sheetRef.current.snapTo(0)
+    setUsername_su('');
+    setPassword_su('');
+    setConfirmpassword_su('');
+    setMessage_su('');
+    setColor('gray');
+  }
 
   const renderContent = () => (
     <View style={styles.bottomSheet}>
@@ -107,6 +117,7 @@ const Login: React.FC<LoginProps> = (props) => {
         value={username_su}
         placeholder={'Username'}
         textContentType='username'
+        autoFocus = {true}
       />
       <TextInput 
         style={styles.textInput_bs}
@@ -115,17 +126,24 @@ const Login: React.FC<LoginProps> = (props) => {
         placeholder={'Password'}
         secureTextEntry={true}
       />
-      <TextInput 
-        style={styles.textInput_bs}
+      <TextInput
+        style={[styles.textInput_bs, {borderColor: color}]}
         onChangeText={text => {
           setConfirmpassword_su(text);
           
-          if(text !== password_su)
+          if (text === '')
           {
-            setMessage_su('Password and conform password are not same.')
+            setColor('gray')
+            setMessage_su('')
+          }
+          else if(text !== password_su)
+          {
+            setColor('red')
+            setMessage_su('Passwords need to match.')
           }
           else
           {
+            setColor('#32CD32')
             setMessage_su('')
           }
         }}
@@ -174,7 +192,7 @@ const Login: React.FC<LoginProps> = (props) => {
                   <Text style={styles.loginText}>Login</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
+              <TouchableOpacity onPress={() => openBottomSheet()}>
                 <Text style={styles.loginText}>Sign up</Text>
               </TouchableOpacity>
               <Text style={styles.message}>{message}</Text>
@@ -182,7 +200,7 @@ const Login: React.FC<LoginProps> = (props) => {
             <BottomSheet
               ref={sheetRef}
               snapPoints={[350, 0]}
-              borderRadius={10}
+              borderRadius={25}
               renderContent={renderContent}
               initialSnap={1}
             />
@@ -212,6 +230,11 @@ const Login: React.FC<LoginProps> = (props) => {
       if(res.ok)
       {
         setTimeout(() => sheetRef.current.snapTo(1), 1000);
+        setUsername_su('');
+        setPassword_su('');
+        setConfirmpassword_su('');
+        setMessage_su('');
+        setColor('gray');
       }
     })
     .catch((err) => {
@@ -254,7 +277,8 @@ const styles = StyleSheet.create({
     fontFamily: "Audrey",
     fontSize: 30,
     color: "#FFFFFF",
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginBottom: 5
   },
   textInput: {
     height: 40,
@@ -271,20 +295,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     alignContent: 'center',
-    width: '30%',
+    width: '50%',
+    marginTop: 26,
     marginVertical: 10,
     height: 40,
-    borderRadius: 10,
+    borderRadius: 20,
   },
   loginButton_disable: {
     backgroundColor: 'gray',
     alignItems: 'center',
     alignSelf: 'center',
     alignContent: 'center',
-    width: '30%',
+    width: '50%',
+    marginTop: 26,
     marginVertical: 10,
     height: 40,
-    borderRadius: 10,
+    borderRadius: 20,
   },
   loginText: {
     color: 'white',
@@ -301,7 +327,8 @@ const styles = StyleSheet.create({
     fontFamily: "Audrey",
     fontSize: 30,
     color: "black",
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop: 10
   },
   textInput_bs: {
     height: 40,
@@ -316,6 +343,7 @@ const styles = StyleSheet.create({
   message: {
     color: 'red',
     fontSize: 15,
+    marginTop: 8,
     marginVertical: 10,
     alignContent: 'center',
     alignSelf: 'center'

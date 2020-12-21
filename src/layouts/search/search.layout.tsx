@@ -25,13 +25,14 @@ function SearchScreen({ navigation }) {
     const [more, setMore] = React.useState(false);
     const [result, setResult] = React.useState([]);
     const [startIndex, setStartIndex] = React.useState(0);
-    const tags = ['US Election', 'Taiwan', 'HK Protest', 'Tokyo Olympic', 'NTU', 'Play Station', 'Election', 'Thailand Protest',
-    'Covid-19', 'China', 'Covid-19 Vaccines'];
-    const keywords = ['money heist', 'buy mask', 'windows update', 'airpods max'];
+    const tags = ['Trade Deal', 'Taiwan', 'China', 'HK Protest', 'Thailand Protest', 'US Election', 'Covid-19 Vaccines'];
+    const keywords = ['Trade Deal', 'buy mask', 'Thailand'];
 
-    // function doSearch(search) {
-    //     changeText(search)
-    // }
+    function searchHistory(search) {
+        changeText(search);
+        navigation.navigate('Timeline', { tag: search })
+        changeText('');
+    }
     
     return(
         <UserContext.Consumer>
@@ -87,7 +88,7 @@ function SearchScreen({ navigation }) {
                                     more ? 
                                     tags.map((t, index) => {
                                         return (
-                                        <TouchableOpacity onPress={()=>changeText(t)}>
+                                        <TouchableOpacity onPress={()=>searchHistory(t)}>
                                             <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
                                             marginLeft={''} marginRight={0}/>
                                         </TouchableOpacity>
@@ -96,7 +97,7 @@ function SearchScreen({ navigation }) {
                                     :
                                     tags.slice(0,5).map((t, index) => {
                                         return (
-                                        <TouchableOpacity onPress={()=>changeText(t)}>
+                                        <TouchableOpacity onPress={()=>searchHistory(t)}>
                                             <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
                                             marginLeft={''} marginRight={0}/>
                                         </TouchableOpacity>
