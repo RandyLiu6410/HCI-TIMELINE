@@ -101,11 +101,8 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
 
     async function _cacheResourcesAsync(username: string) {
       const cacheFollowingTags = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
-      .then((res) => {
-          return res.json();
-      })
-
-      setFollowingTags(cacheFollowingTags);
+      .then((res) => res.json())
+      .then(data => setFollowingTags(data));
 
       return cacheFollowingTags;
   }

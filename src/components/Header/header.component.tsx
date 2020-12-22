@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
+import { useNavigation } from '@react-navigation/native';
 
 import BackIcon from '../../components/Icon/back.component';
 
@@ -13,24 +14,25 @@ export interface HeaderProps {
     hasChild: boolean;
     child: string;
     previous: any;
-    navigation: StackNavigationProp<Record<string, object | undefined>, string>;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
+    const navigation = useNavigation();
+
     let [fontsLoaded] = useFonts({
         'Audrey': require('../../../assets/fonts/Audrey/Audrey-Normal.otf'),
         'Gobold': require('../../../assets/fonts/gobold/GoboldBold.otf')
     });
 
-    if (!fontsLoaded) {
-        return <AppLoading />;
-    } else {
+    // if (!fontsLoaded) {
+    //     return <AppLoading />;
+    // } else {
         return (
             <View style={styles.container}>
                 {
                     props.previous ? 
                     <View style={styles.backButton}>
-                        <BackIcon onPress={props.navigation.goBack} color="#C4C4C4" size={20}/> 
+                        <BackIcon onPress={navigation.goBack} color="#C4C4C4" size={20}/> 
                     </View>
                     : <View />
                 }
@@ -44,7 +46,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                 }
             </View>
         );
-    }
+    // }
 }
 
 const styles = StyleSheet.create({

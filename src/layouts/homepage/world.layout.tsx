@@ -91,20 +91,19 @@ const WorldLayout: React.FC<WorldLayoutProps> = (props) => {
 
     async function _cacheResourcesAsync() {
         const cacheNews = await fetch(`http://54.226.5.241:8080/news/keywords?keyWord=US&sort=descending&startIndex=${startIndex}&limit=20`)
-        .then((res) => {
-            return res.json();
-        })
-        
-        if(newsData.length === 0)
-        {
-            setNewsData(cacheNews);
-        }
-        else
-        {
-            setNewsData(newsData.concat(cacheNews));
-        }
+        .then((res) => res.json())
+        .then(data => {
+            if(newsData.length === 0)
+            {
+                setNewsData(data);
+            }
+            else
+            {
+                setNewsData(newsData.concat(data));
+            }
 
-        setStartIndex(startIndex + 20);
+            setStartIndex(startIndex + 20);
+        })
 
         return cacheNews;
     }

@@ -22,10 +22,33 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     const navigation = useNavigation();
     const sortSheetRef = React.useRef(null);
     const [sort, setSort] = React.useState('new');
-    // console.log(tag)
+    const [following, setFollowing] = React.useState(false);
 
     function changeSort() {
         sortSheetRef.current.snapTo(0);
+    }
+
+    React.useEffect(() => {
+        fetch(`http://54.226.5.241:8080/user/checkfollow?username=${user.name}&tag=${tag}`)
+        .then((res) => {
+            res.json().then(result => setFollowing(result));
+        })
+        .catch((err) => {
+        })
+    }, [following])
+
+    function followTag() {
+        fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
+          method: 'POST'
+        })
+        .then((res) => {
+            if(res.ok)
+            {
+                setFollowing(true)
+            }
+        })
+        .catch((err) => {
+        })
     }
 
     return(
@@ -35,8 +58,9 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
             </View>
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{'# ' + tag}</Text>
-                <TextButton text='Following' fontSize={10} paddingVertical={5} paddingHorizontal={15} marginTop={10} 
-                 marginRight={15}/>
+                <TouchableOpacity onPress={() => followTag()} disabled={following}>
+                    <Text style={styles.followButton}>{following ? 'Following' : "Follow"}</Text>
+                </TouchableOpacity>
                 <View style={styles.sort}>
                     {
                         sort === 'new'
@@ -48,8 +72,9 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                     <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
                 </View>
             </View>
-            <Timeline customtag={customtag} tag={tag} followtime={followtime} user={user} cardOnPress={(news: NewsModel) => {
-                navigation.navigate('News', { news: news });
+            <Timeline sort={sort} customtag={customtag} tag={tag} followtime={followtime} user={user} 
+                cardOnPress={(news: NewsModel) => {
+                navigation.navigate('News', { news: news, user: user });
                 addHistory(user.name, news.url);
             }}/>
             <SortPopUp
@@ -122,6 +147,22 @@ const styles = StyleSheet.create({
     scrollview: {
         marginHorizontal: 20
     },
+    followButton: {
+        borderRadius: 100,
+        backgroundColor: "#424242",
+        alignContent: "center",
+        justifyContent: "center",
+        color: "#E5E5E5",
+        fontSize: 10,
+        textAlign: "center",
+        paddingVertical: 5,
+        paddingHorizontal: 5,
+        marginHorizontal: 5,
+        width: 60,
+        alignSelf: 'flex-end',
+        marginVertical: 10,
+        marginRight: 15
+    }
 });
 
 export default TimelineLayout;

@@ -29,12 +29,12 @@ const SearchScreen: React.FC<SearchLayoutProps> = (props) => {
     const [result, setResult] = React.useState([]);
     const [startIndex, setStartIndex] = React.useState(0);
 
-    function searchHistory(username: string, search: string) {
+    function searchHistory(user: {name: string}, search: string) {
         changeText(search);
-        navigation.navigate('Timeline', { tag: search })
+        navigation.navigate('Timeline', { tag: search, user: user })
         changeText('');
 
-        fetch(`http://54.226.5.241:8080/user/searchhistory?username=${username}&tag=${search}`, {
+        fetch(`http://54.226.5.241:8080/user/searchhistory?username=${user.name}&tag=${search}`, {
           method: 'POST'
         });
     }
@@ -85,7 +85,7 @@ const SearchScreen: React.FC<SearchLayoutProps> = (props) => {
                                     props.initialKeywords.filter(word => word.toLowerCase().includes(search.toLowerCase()))
                                     .map((word, index) => {
                                         return (
-                                            <TouchableOpacity onPress={()=>searchHistory(user.name, word)}>
+                                            <TouchableOpacity onPress={()=>searchHistory(user, word)}>
                                                 <TextButton key={index} text={'# ' + word} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
                                                 marginLeft={''} marginRight={0}/>
                                             </TouchableOpacity>
@@ -96,7 +96,7 @@ const SearchScreen: React.FC<SearchLayoutProps> = (props) => {
                                 {
                                     result.map(r => {
                                         return <TouchableOpacity onPress={() => {
-                                            navigation.navigate('News', { news: r });
+                                            navigation.navigate('News', { news: r, user: user });
                                             addHistory(user.name, r.url);
                                         }}>
                                             <SearchCard news={r}/>
@@ -112,7 +112,7 @@ const SearchScreen: React.FC<SearchLayoutProps> = (props) => {
                                     more ? 
                                     props.tags.map((t, index) => {
                                         return (
-                                        <TouchableOpacity onPress={()=>searchHistory(user.name, t)}>
+                                        <TouchableOpacity onPress={()=>searchHistory(user, t)}>
                                             <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
                                             marginLeft={''} marginRight={0}/>
                                         </TouchableOpacity>
@@ -121,7 +121,7 @@ const SearchScreen: React.FC<SearchLayoutProps> = (props) => {
                                     :
                                     props.tags.slice(0,5).map((t, index) => {
                                         return (
-                                        <TouchableOpacity onPress={()=>searchHistory(user.name, t)}>
+                                        <TouchableOpacity onPress={()=>searchHistory(user, t)}>
                                             <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
                                             marginLeft={''} marginRight={0}/>
                                         </TouchableOpacity>
@@ -161,20 +161,19 @@ const SearchScreen: React.FC<SearchLayoutProps> = (props) => {
 
     async function onSearch() {
         const cacheNews = await fetch(`http://54.226.5.241:8080/news/keywords?keyWord=${search}&sort=descending&startIndex=${startIndex}&limit=20`)
-        .then((res) => {
-            return res.json();
+        .then((res) => res.json())
+        .then(data => {
+            if(result.length === 0)
+            {
+                setResult(data);
+            }
+            else
+            {
+                setResult(result.concat(data));
+            }
+            
+            setStartIndex(startIndex + 20);
         })
-        
-        if(result.length === 0)
-        {
-            setResult(cacheNews);
-        }
-        else
-        {
-            setResult(result.concat(cacheNews));
-        }
-        
-        setStartIndex(startIndex + 20);
 
         return cacheNews;
     }
@@ -253,18 +252,12 @@ const SearchLayout = () => {
         });
         
         const cache = await fetch(`http://54.226.5.241:8080/user/searchhistory/?username=${_username}`)
-        .then((res) => {
-            return res.json();
-        })
-
-        setHistory(cache);
+        .then((res) => res.json())
+        .then(data => setHistory(data));
 
         const cache1 = await fetch(`http://54.226.5.241:8080/news/taglist`)
-        .then((res) => {
-            return res.json();
-        })
-
-        setInitialKeywords(cache1);
+        .then((res) => res.json())
+        .then(data => setInitialKeywords(data));
 
         return cache;
     }

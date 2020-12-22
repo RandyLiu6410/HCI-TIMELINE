@@ -81,7 +81,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
                     setNotification(tagName);
                     tagSheetRef.current.snapTo(2);
                     notificationSheetRef.current.snapTo(0);
-                    
+
                     setTimeout(() => notificationSheetRef.current.snapTo(1), 1000);
                 }}
             />
@@ -91,20 +91,19 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
 
     async function _cacheResourcesAsync() {
         const cacheNews = await fetch(`http://54.226.5.241:8080/news/?sort=descending&startIndex=${startIndex}&limit=20`)
-        .then((res) => {
-            return res.json();
+        .then((res) => res.json())
+        .then(data => {
+            if(newsData.length === 0)
+            {
+                setNewsData(data);
+            }
+            else
+            {
+                setNewsData(newsData.concat(data));
+            }
+    
+            setStartIndex(startIndex + 20);
         })
-
-        if(newsData.length === 0)
-        {
-            setNewsData(cacheNews);
-        }
-        else
-        {
-            setNewsData(newsData.concat(cacheNews));
-        }
-
-        setStartIndex(startIndex + 20);
 
         return cacheNews;
     }

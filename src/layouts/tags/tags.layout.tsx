@@ -124,18 +124,12 @@ const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
         });
         
         const cache = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${_username}`)
-        .then((res) => {
-            return res.json();
-        })
-
-        setTags(cache);
+        .then((res) => res.json())
+        .then(data => setTags(data));
 
         const cache1 = await fetch(`http://54.226.5.241:8080/user/customtags/?username=${_username}`)
-        .then((res) => {
-            return res.json();
-        })
-
-        setCustomTags(cache1);
+        .then((res) => res.json())
+        .then(data => setCustomTags(data));
 
         return cache;
     }
