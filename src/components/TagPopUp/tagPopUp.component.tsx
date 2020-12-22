@@ -67,8 +67,17 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
                 {
                   value !== "" ? 
                   <ConfirmIcon onPress={() => {
-                    props.tagAdded(`The news has been added to ${value}`);
-                    // _cacheResourcesAsync(props.user.name);
+                    fetch(`http://54.226.5.241:8080/user/customtags?username=${props.user.name}&tag=${value}`, {
+                      method: 'POST'
+                    })
+                    .then((res) => {
+                        if(res.ok)
+                        {
+                          props.tagAdded(`The news has been added to ${value}`);
+                        }
+                    })
+                    .catch((err) => {
+                    })
                   }} size={24} color="white"/>
                   :
                   <View />

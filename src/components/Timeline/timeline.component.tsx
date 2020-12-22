@@ -52,6 +52,7 @@ const DATA = [
   ];
 
 export interface TimelineProps {
+    customtag: boolean;
     tag: string;
     cardOnPress: any;
     user: {name: string};
@@ -65,6 +66,13 @@ const Timeline: React.FC<TimelineProps> = (props) => {
     const [startIndex, setStartIndex] = React.useState(0);
     const [isRefreshing, setIsRefreshing] = React.useState(false);
     const [isWaiting, setIsWaiting] = React.useState(false);
+
+    React.useEffect(() => {
+        if(isReady)
+        {
+            _cacheResourcesAsync();
+        }
+    }, []);
 
     if (!isReady) {
         return (
@@ -176,10 +184,15 @@ const Timeline: React.FC<TimelineProps> = (props) => {
     );
 
     async function _cacheResourcesAsync() {
-        const cacheNews = await fetch(`http://54.226.5.241:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=${startIndex}&limit=20`)
+        const cacheNews = !props.customtag ? await fetch(`http://54.226.5.241:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
-        });
+        })
+        :
+        await fetch(`http://54.226.5.241:8080/news/keywords?keyWord=${props.tag}&sort=descending&startIndex=${startIndex}&limit=20`)
+        .then((res) => {
+            return res.json();
+        })
 
         if(props.followtime)
         {

@@ -18,6 +18,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     const tag = props.route.params.tag;
     const followtime = props.route.params.followtime;
     const user = props.route.params.user;
+    const customtag = props.route.params.customtag || false;
     const navigation = useNavigation();
     const sortSheetRef = React.useRef(null);
     const [sort, setSort] = React.useState('new');
@@ -47,7 +48,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                     <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
                 </View>
             </View>
-            <Timeline tag={tag} followtime={followtime} user={user} cardOnPress={(news: NewsModel) => {
+            <Timeline customtag={customtag} tag={tag} followtime={followtime} user={user} cardOnPress={(news: NewsModel) => {
                 navigation.navigate('News', { news: news });
                 addHistory(user.name, news.url);
             }}/>

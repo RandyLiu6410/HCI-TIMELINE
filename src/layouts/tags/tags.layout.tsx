@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Header from '../../components/Header/header.component';
 import CustomText from '../../components/CustomText/customText.component';
@@ -13,46 +14,74 @@ import { AppLoading } from 'expo';
 
 export interface TagsLayoutProps {
     tags: string[];
+    customTags: string[];
 }
 
-
-function TagScreen({ navigation }) {
-    // const tags = ['US Election', 'Taiwan', 'HK Protest', 'Tokyo Olympic', 'NTU', 'Play Station', 'Election'];
+const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
+    const navigation = useNavigation();
+    const [username, setUsername] = React.useState('');
     const [tags, setTags] = React.useState([]);
+    const [customTags, setCustomTags] = React.useState([]);
     const [isReady, setIsReady] = React.useState(false);
 
-    if (!isReady) {
-        return (
-            <UserContext.Consumer>
-            {user => (
-                <AppLoading
-                    startAsync={() => _cacheResourcesAsync(user.name)}
-                    onFinish={() => setIsReady(true)}
-                    onError={console.warn}
-                />
-            )}
-            </UserContext.Consumer>
-        )
-    }
+    // React.useEffect(() => {
+    //     if(isReady)
+    //     {
+    //         const unsubscribe = navigation.addListener('tabPress', () => {
+    //             _cacheResourcesAsync(username);
+    //           });
+          
+    //         return unsubscribe;
+    //     }
+    // }, []);
+
+    // if (!isReady) {
+    //     return (
+    //         <UserContext.Consumer>
+    //         {user => (
+    //             <AppLoading
+    //                 startAsync={() => _cacheResourcesAsync(user.name)}
+    //                 onFinish={() => setIsReady(true)}
+    //                 onError={console.warn}
+    //             />
+    //         )}
+    //         </UserContext.Consumer>
+    //     )
+    // }
     
     return(
         <UserContext.Consumer>
         {user => (
             <SafeAreaView style={styles.container}>
-                <Header
+                {/* <Header
                     hasChild={true}
                     child={"TAGs"}
                     previous={null}
                     navigation={navigation}
-                />
+                /> */}
                 <ScrollView style={styles.scrollView}>
                     <Text style={styles.title}>Tags You Follow</Text>
                     <View style={styles.content}>
                         {    
-                            tags.map((t, index) => {
+                            props.tags.map((t, index) => {
                                 return(
                                     <TouchableOpacity key={index} style={styles.hashWrapper} 
                                     onPress={()=>navigation.navigate('Timeline', {tag: t.tag, followtime: t.followtime, user: user})}>
+                                        <Text style={styles.hash}>{'# '}</Text>
+                                        <Text style={styles.hashContent}>{t.tag}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+                        
+                    </View>
+                    <Text style={styles.title}>Tags You Made</Text>
+                    <View style={styles.content}>
+                        {    
+                            props.customTags.map((t, index) => {
+                                return(
+                                    <TouchableOpacity key={index} style={styles.hashWrapper} 
+                                    onPress={()=>navigation.navigate('Timeline', {customtag: true, tag: t.tag, followtime: t.followtime, user: user})}>
                                         <Text style={styles.hash}>{'# '}</Text>
                                         <Text style={styles.hashContent}>{t.tag}</Text>
                                     </TouchableOpacity>
@@ -68,6 +97,8 @@ function TagScreen({ navigation }) {
     );
 
     async function _cacheResourcesAsync(username: string) {
+        setUsername(username);
+        
         const cache = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
         .then((res) => {
             return res.json();
@@ -75,16 +106,54 @@ function TagScreen({ navigation }) {
 
         setTags(cache);
 
+        const cache1 = await fetch(`http://54.226.5.241:8080/user/customtags/?username=${username}`)
+        .then((res) => {
+            return res.json();
+        })
+
+        setCustomTags(cache1);
+
         return cache;
     }
 }
 
 const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
-    
-    // var tagList = props.tags.map((t, index) => {
-    //     return <GridRow key={index} tagName={t}/>
-    // })
+    const navigation = useNavigation();
+    navigation.addListener('focus', async () => {
+        _cacheResourcesAsync(username);
+    });
+
     const Stack = createStackNavigator();
+
+    const [username, setUsername] = React.useState('');
+    const [tags, setTags] = React.useState([]);
+    const [customTags, setCustomTags] = React.useState([]);
+    const [isReady, setIsReady] = React.useState(false);
+
+    if (!isReady) {
+        return (
+            <UserContext.Consumer>
+            {user => (
+                <AppLoading
+                    startAsync={() => _cacheResourcesAsync(user.name)}
+                    onFinish={() => setIsReady(true)}
+                    onError={console.warn}
+                />
+            )}
+            </UserContext.Consumer>
+        )
+    }
+
+    // if (isReady)
+    // {
+    //     React.useEffect(() => {
+    //             const unsubscribe = navigation.addListener('focus', async () => {
+    //                 _cacheResourcesAsync(username);
+    //             });
+            
+    //             return unsubscribe;
+    //     }, [navigation]);
+    // }
     
     return(
         <Stack.Navigator screenOptions={{
@@ -101,11 +170,34 @@ const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
                 
             }
         }}>
-            <Stack.Screen name="Tag" component={TagScreen} />
+            <Stack.Screen name="Tag" component={() => <TagsScreen tags={tags} customTags={customTags} />} />
             <Stack.Screen name="Timeline" component={TimelineLayout} />
             <Stack.Screen name="News" component={NewsLayout} />
         </Stack.Navigator>
     );
+
+    async function _cacheResourcesAsync(_username: string) {
+        if(_username !== username)
+        {
+            setUsername(username);
+        }
+        
+        const cache = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
+        .then((res) => {
+            return res.json();
+        })
+
+        setTags(cache);
+
+        const cache1 = await fetch(`http://54.226.5.241:8080/user/customtags/?username=${username}`)
+        .then((res) => {
+            return res.json();
+        })
+
+        setCustomTags(cache1);
+
+        return cache;
+    }
 }
 
 const styles = StyleSheet.create({
