@@ -6,24 +6,37 @@ import CustomText from '../CustomText/customText.component';
 import GridRow from '../GridRow/gridRow.component';
 import ConfirmIcon from '../Icon/confirm.component';
 import NewsModel from '../../model/news.model';
+import { AppLoading } from 'expo';
 
 export interface TagPopUpProps {
+  user: {name: string};
   sheetRef: React.MutableRefObject<null>;
   news: NewsModel;
-  followingTags: any;
   tagAdded: (arg0: string) => void;
 }
 
 const TagPopUp: React.FC<TagPopUpProps> = (props) => {
     const [value, onChangeText] = React.useState("");
+    const [isReady, setIsReady] = React.useState(false);
+    const [followingTags, setFollowingTags] = React.useState([]);
 
-    var tagsView = props.news.tags.map((t, index) => {
-      return <GridRow 
-      key={index} 
-      tagName={t} 
-      following={props.followingTags.filter(tag => tag.tag === t).length > 0}
-      onPress={props.tagAdded}/>
-    })
+    if (!isReady) {
+      return (
+          <AppLoading
+            startAsync={() => _cacheResourcesAsync(props.user.name)}
+            onFinish={() => setIsReady(true)}
+            onError={console.warn}
+          />
+      )
+  }
+
+    // var tagsView = props.news.tags.map((t, index) => {
+    //   return <GridRow 
+    //   key={index} 
+    //   tagName={t} 
+    //   following={followingTags.filter(tag => tag.tag === t).length > 0}
+    //   onPress={props.tagAdded}/>
+    // });
 
     const renderContent = () => (
         <View
@@ -33,7 +46,15 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
             <Text style={styles.newstitle}>{props.news.title}</Text>
             <CustomText text="Suggested Tag" fontSize={18} width={150}/>
             <ScrollView style={styles.scrollView}>
-              {tagsView}
+              {
+                props.news.tags.map((t, index) => {
+                  return <GridRow 
+                  key={index} 
+                  tagName={t} 
+                  following={followingTags.filter(tag => tag.tag === t).length > 0}
+                  onPress={props.tagAdded}/>
+                })
+              }
             </ScrollView>
             <View style={styles.textField}>
               <Text style={styles.hash}>#</Text>
@@ -45,7 +66,10 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
                 value={value}/>
                 {
                   value !== "" ? 
-                  <ConfirmIcon onPress={() => props.tagAdded(`The news has been added to ${value}`)} size={24} color="white"/>
+                  <ConfirmIcon onPress={() => {
+                    props.tagAdded(`The news has been added to ${value}`);
+                    // _cacheResourcesAsync(props.user.name);
+                  }} size={24} color="white"/>
                   :
                   <View />
                 }
@@ -61,8 +85,20 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
         borderRadius={10}
         renderContent={renderContent}
         initialSnap={2}
+        onOpenStart={async () => await _cacheResourcesAsync(props.user.name)}
       />
     );
+
+    async function _cacheResourcesAsync(username: string) {
+      const cacheFollowingTags = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
+      .then((res) => {
+          return res.json();
+      })
+
+      setFollowingTags(cacheFollowingTags);
+
+      return cacheFollowingTags;
+  }
 }
 
 const styles = StyleSheet.create({

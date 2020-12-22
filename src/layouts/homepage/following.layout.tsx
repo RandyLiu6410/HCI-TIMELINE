@@ -33,7 +33,6 @@ const FollowingLayout: React.FC<FollowingLayoutProps> = (props) => {
     const notificationSheetRef = React.useRef(null);
     const [isReady, setIsReady] = React.useState(false);
     const [newsData, setNewsData] = React.useState([]);
-    const [followingTags, setFollowingTags] = React.useState([]);
     const [news, setNews] = React.useState(DATA[0]);
     const [notification, setNotification] = React.useState('');
     const [startIndex, setStartIndex] = React.useState(0);
@@ -77,11 +76,13 @@ const FollowingLayout: React.FC<FollowingLayoutProps> = (props) => {
             <TagPopUp 
                 sheetRef={tagSheetRef}
                 news={news}
-                followingTags={followingTags}
+                user={props.user}
                 tagAdded={(tagName: string) => {
                     setNotification(tagName);
                     tagSheetRef.current.snapTo(2);
                     notificationSheetRef.current.snapTo(0);
+                    
+                    setTimeout(() => notificationSheetRef.current.snapTo(1), 1000);
                 }}
             />
             <Notification sheetRef={notificationSheetRef} message={notification}/>
@@ -89,16 +90,6 @@ const FollowingLayout: React.FC<FollowingLayoutProps> = (props) => {
     );
 
     async function _cacheResourcesAsync(username: string) {
-        if(username)
-        {
-            const cacheFollowingTags = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
-            .then((res) => {
-                return res.json();
-            })
-    
-            setFollowingTags(cacheFollowingTags);
-        }
-        
         const cacheNews = await fetch(`http://54.226.5.241:8080/news/following?sort=descending&startIndex=${startIndex}&limit=20&username=${username}`)
         .then((res) => {
             return res.json();

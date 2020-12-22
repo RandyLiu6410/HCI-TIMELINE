@@ -61,13 +61,16 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
             <TagPopUp 
                 sheetRef={tagSheetRef}
                 news={news}
+                user={props.route.params.user}
                 tagAdded={(tagName: string) => {
                     setNotification(tagName);
                     tagSheetRef.current.snapTo(2);
                     notificationSheetRef.current.snapTo(0);
+
+                    setTimeout(() => notificationSheetRef.current.snapTo(1), 1000);
                 }}
             />
-            <Notification sheetRef={notificationSheetRef} tagName={notification}/>
+            <Notification sheetRef={notificationSheetRef} message={notification}/>
         </View>
     );
 }

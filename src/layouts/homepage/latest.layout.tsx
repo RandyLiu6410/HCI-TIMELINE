@@ -33,7 +33,6 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     const notificationSheetRef = React.useRef(null);
     const [isReady, setIsReady] = React.useState(false);
     const [newsData, setNewsData] = React.useState([]);
-    const [followingTags, setFollowingTags] = React.useState([]);
     const [news, setNews] = React.useState(DATA[0]);
     const [notification, setNotification] = React.useState('');
     const [startIndex, setStartIndex] = React.useState(0);
@@ -41,7 +40,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
     if (!isReady) {
         return (
             <AppLoading
-              startAsync={() => _cacheResourcesAsync(props.user.name)}
+              startAsync={() => _cacheResourcesAsync()}
               onFinish={() => setIsReady(true)}
               onError={console.warn}
             />
@@ -54,7 +53,7 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
                 scrollEventThrottle={400}
                 onScroll={({nativeEvent}) => {
                     if (isCloseToBottom(nativeEvent)) {
-                        _cacheResourcesAsync(props.user.name);
+                        _cacheResourcesAsync();
                     }
                 }}
                 showsVerticalScrollIndicator={false}
@@ -77,33 +76,25 @@ const LatestLayout: React.FC<LatestLayoutProps> = (props) => {
             <TagPopUp 
                 sheetRef={tagSheetRef}
                 news={news}
-                followingTags={followingTags}
+                user={props.user}
                 tagAdded={(tagName: string) => {
                     setNotification(tagName);
                     tagSheetRef.current.snapTo(2);
                     notificationSheetRef.current.snapTo(0);
+                    
+                    setTimeout(() => notificationSheetRef.current.snapTo(1), 1000);
                 }}
             />
             <Notification sheetRef={notificationSheetRef} message={notification}/>
         </View>
     );
 
-    async function _cacheResourcesAsync(username: string) {
-        if(username)
-        {
-            const cacheFollowingTags = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
-            .then((res) => {
-                return res.json();
-            })
-    
-            setFollowingTags(cacheFollowingTags);
-        }
-        
+    async function _cacheResourcesAsync() {
         const cacheNews = await fetch(`http://54.226.5.241:8080/news/?sort=descending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
         })
-        
+
         if(newsData.length === 0)
         {
             setNewsData(cacheNews);
