@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 import Header from '../../components/Header/header.component';
 import { SearchBar } from 'react-native-elements';
@@ -13,25 +14,29 @@ import NewsLayout from '../news/news.layout';
 import TimelineLayout from '../timeline/timeline.layout';
 
 import UserContext from '../../services/UserContext';
+import { AppLoading } from 'expo';
 
 export interface SearchLayoutProps {
-    tagHistory: string[];
-    history: string[];
-    // showMore: () => void;
+    tags: string[]; 
+    keywords: string[];
+    initialKeywords: string[];
 }
 
-function SearchScreen({ navigation }) {
+const SearchScreen: React.FC<SearchLayoutProps> = (props) => {
+    const navigation = useNavigation();
     const [search, changeText] = React.useState('');
     const [more, setMore] = React.useState(false);
     const [result, setResult] = React.useState([]);
     const [startIndex, setStartIndex] = React.useState(0);
-    const tags = ['Trade Deal', 'Taiwan', 'China', 'HK Protest', 'Thailand Protest', 'US Election', 'Covid-19 Vaccines'];
-    const keywords = ['Trade Deal', 'buy mask', 'Thailand'];
 
-    function searchHistory(search) {
+    function searchHistory(username: string, search: string) {
         changeText(search);
         navigation.navigate('Timeline', { tag: search })
         changeText('');
+
+        fetch(`http://54.226.5.241:8080/user/searchhistory?username=${username}&tag=${search}`, {
+          method: 'POST'
+        });
     }
     
     return(
@@ -50,7 +55,13 @@ function SearchScreen({ navigation }) {
                         setResult([]);
                         changeText(search);
                     }}
-                    onSubmitEditing={() => _cacheResourcesAsync()}
+                    onSubmitEditing={() => {
+                        onSearch();
+
+                        fetch(`http://54.226.5.241:8080/user/searchhistory?username=${user.name}&keyword=${search}`, {
+                            method: 'POST'
+                        });
+                    }}
                     value={search}
                     // clearIcon={false}
                     containerStyle={styles.searchBarContainer}
@@ -60,7 +71,7 @@ function SearchScreen({ navigation }) {
                     scrollEventThrottle={400}
                     onScroll={({nativeEvent}) => {
                         if (isCloseToBottom(nativeEvent)) {
-                            _cacheResourcesAsync();
+                            onSearch();
                         }
                     }}
                     style={styles.scrollView}
@@ -69,6 +80,19 @@ function SearchScreen({ navigation }) {
                         {
                             search !== '' ? 
                             <View>
+                                <View style={styles.tags}>
+                                {
+                                    props.initialKeywords.filter(word => word.toLowerCase().includes(search.toLowerCase()))
+                                    .map((word, index) => {
+                                        return (
+                                            <TouchableOpacity onPress={()=>searchHistory(user.name, word)}>
+                                                <TextButton key={index} text={'# ' + word} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
+                                                marginLeft={''} marginRight={0}/>
+                                            </TouchableOpacity>
+                                        )
+                                    })
+                                }
+                                </View>
                                 {
                                     result.map(r => {
                                         return <TouchableOpacity onPress={() => {
@@ -86,18 +110,18 @@ function SearchScreen({ navigation }) {
                                 <View style={styles.tags}>
                                 {    
                                     more ? 
-                                    tags.map((t, index) => {
+                                    props.tags.map((t, index) => {
                                         return (
-                                        <TouchableOpacity onPress={()=>searchHistory(t)}>
+                                        <TouchableOpacity onPress={()=>searchHistory(user.name, t)}>
                                             <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
                                             marginLeft={''} marginRight={0}/>
                                         </TouchableOpacity>
                                         )
                                     })
                                     :
-                                    tags.slice(0,5).map((t, index) => {
+                                    props.tags.slice(0,5).map((t, index) => {
                                         return (
-                                        <TouchableOpacity onPress={()=>searchHistory(t)}>
+                                        <TouchableOpacity onPress={()=>searchHistory(user.name, t)}>
                                             <TextButton key={index} text={'# ' + t} fontSize={14} paddingVertical={6} paddingHorizontal={10} marginTop={0} 
                                             marginLeft={''} marginRight={0}/>
                                         </TouchableOpacity>
@@ -108,13 +132,16 @@ function SearchScreen({ navigation }) {
                                     more ?
                                     <></>
                                     :
+                                    props.tags.length > 5 ?
                                     <TouchableOpacity onPress={()=>{setMore(true)}}>
                                         <MoreIcon size={20} color={'#C4C4C4'}></MoreIcon>
                                     </TouchableOpacity>
+                                    :
+                                    <></>
                                 }
                                 </View>
                                 {    
-                                    keywords.map((t, index) => {
+                                    props.keywords.map((t, index) => {
                                         return (
                                         <TouchableOpacity style={styles.keywordWrapper} onPress={()=>changeText(t)}>
                                             <Text key={index} style={styles.keyword}>{t}</Text>
@@ -132,7 +159,7 @@ function SearchScreen({ navigation }) {
         </UserContext.Consumer>
     );
 
-    async function _cacheResourcesAsync() {
+    async function onSearch() {
         const cacheNews = await fetch(`http://54.226.5.241:8080/news/keywords?keyWord=${search}&sort=descending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
@@ -170,13 +197,35 @@ function SearchScreen({ navigation }) {
     }
 }
 
-const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
-    
-    // var tagList = props.tags.map((t, index) => {
-    //     return <GridRow key={index} tagName={t}/>
-    // })
+const SearchLayout = () => {
+    const navigation = useNavigation();
+
     const Stack = createStackNavigator();
-    
+
+    const [isReady, setIsReady] = React.useState(false);
+    const [history, setHistory] = React.useState({});
+    const [initialKeywords, setInitialKeywords] = React.useState([]);
+
+    if (!isReady) {
+        return (
+            <UserContext.Consumer>
+            {user => (
+                <AppLoading
+                startAsync={() => _cacheResourcesAsync(user.name)}
+                onFinish={() => setIsReady(true)}
+                onError={console.warn}
+                />
+            )}
+            </UserContext.Consumer>
+        )
+    }
+
+    function SearchScreenComponent() {
+        return (
+            <SearchScreen tags={history.tags} keywords={history.keywords} initialKeywords={initialKeywords} />
+        );
+    };
+
     return(
         <Stack.Navigator screenOptions={{
             header: ({ scene, previous, navigation }) => {
@@ -192,11 +241,33 @@ const SearchLayout: React.FC<SearchLayoutProps> = (props) => {
                 
             }
         }}>
-            <Stack.Screen name="Search" component={SearchScreen} />
+            <Stack.Screen name="Search" component={SearchScreenComponent} />
             <Stack.Screen name="News" component={NewsLayout} />
             <Stack.Screen name="Timeline" component={TimelineLayout} />
         </Stack.Navigator>
     );
+
+    async function _cacheResourcesAsync(_username: string) {
+        navigation.addListener('focus', async () => {
+            _cacheResourcesAsync(_username);
+        });
+        
+        const cache = await fetch(`http://54.226.5.241:8080/user/searchhistory/?username=${_username}`)
+        .then((res) => {
+            return res.json();
+        })
+
+        setHistory(cache);
+
+        const cache1 = await fetch(`http://54.226.5.241:8080/news/taglist`)
+        .then((res) => {
+            return res.json();
+        })
+
+        setInitialKeywords(cache1);
+
+        return cache;
+    }
 }
 
 const styles = StyleSheet.create({

@@ -95,6 +95,7 @@ const TagPopUp: React.FC<TagPopUpProps> = (props) => {
         renderContent={renderContent}
         initialSnap={2}
         onOpenStart={async () => await _cacheResourcesAsync(props.user.name)}
+        onCloseEnd={() => onChangeText('')}
       />
     );
 

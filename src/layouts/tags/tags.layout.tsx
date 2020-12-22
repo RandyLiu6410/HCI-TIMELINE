@@ -70,13 +70,9 @@ const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
 
 const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
     const navigation = useNavigation();
-    navigation.addListener('focus', async () => {
-        _cacheResourcesAsync(username);
-    });
 
     const Stack = createStackNavigator();
 
-    const [username, setUsername] = React.useState('');
     const [tags, setTags] = React.useState([]);
     const [customTags, setCustomTags] = React.useState([]);
     const [isReady, setIsReady] = React.useState(false);
@@ -94,6 +90,12 @@ const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
             </UserContext.Consumer>
         )
     }
+
+    function TagsScreenComponent() {
+        return (
+            <TagsScreen tags={tags} customTags={customTags} />
+        );
+    };
     
     return(
         <Stack.Navigator screenOptions={{
@@ -110,26 +112,25 @@ const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
                 
             }
         }}>
-            <Stack.Screen name="Tag" component={() => <TagsScreen tags={tags} customTags={customTags} />} />
+            <Stack.Screen name="Tag" component={TagsScreenComponent} />
             <Stack.Screen name="Timeline" component={TimelineLayout} />
             <Stack.Screen name="News" component={NewsLayout} />
         </Stack.Navigator>
     );
 
     async function _cacheResourcesAsync(_username: string) {
-        if(_username !== username)
-        {
-            setUsername(username);
-        }
+        navigation.addListener('focus', async () => {
+            _cacheResourcesAsync(_username);
+        });
         
-        const cache = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
+        const cache = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${_username}`)
         .then((res) => {
             return res.json();
         })
 
         setTags(cache);
 
-        const cache1 = await fetch(`http://54.226.5.241:8080/user/customtags/?username=${username}`)
+        const cache1 = await fetch(`http://54.226.5.241:8080/user/customtags/?username=${_username}`)
         .then((res) => {
             return res.json();
         })
