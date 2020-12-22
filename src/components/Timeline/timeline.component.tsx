@@ -88,8 +88,8 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         if(rowData.data)
         {
             return (
-                // <SlideCard news={rowData.data} cardOnPress={props.cardOnPress}/>
-                <SimpleCard news={rowData.data[0]}/>
+                <SlideCard news={rowData.data} cardOnPress={props.cardOnPress}/>
+                // <SimpleCard news={rowData.data[0]}/>
             )
         }
         else
