@@ -19,46 +19,17 @@ export interface TagsLayoutProps {
 
 const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
     const navigation = useNavigation();
-    const [username, setUsername] = React.useState('');
-    const [tags, setTags] = React.useState([]);
-    const [customTags, setCustomTags] = React.useState([]);
-    const [isReady, setIsReady] = React.useState(false);
-
-    // React.useEffect(() => {
-    //     if(isReady)
-    //     {
-    //         const unsubscribe = navigation.addListener('tabPress', () => {
-    //             _cacheResourcesAsync(username);
-    //           });
-          
-    //         return unsubscribe;
-    //     }
-    // }, []);
-
-    // if (!isReady) {
-    //     return (
-    //         <UserContext.Consumer>
-    //         {user => (
-    //             <AppLoading
-    //                 startAsync={() => _cacheResourcesAsync(user.name)}
-    //                 onFinish={() => setIsReady(true)}
-    //                 onError={console.warn}
-    //             />
-    //         )}
-    //         </UserContext.Consumer>
-    //     )
-    // }
     
     return(
         <UserContext.Consumer>
         {user => (
             <SafeAreaView style={styles.container}>
-                {/* <Header
+                <Header
                     hasChild={true}
                     child={"TAGs"}
                     previous={null}
                     navigation={navigation}
-                /> */}
+                />
                 <ScrollView style={styles.scrollView}>
                     <Text style={styles.title}>Tags You Follow</Text>
                     <View style={styles.content}>
@@ -95,26 +66,6 @@ const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
         )}
         </UserContext.Consumer>
     );
-
-    async function _cacheResourcesAsync(username: string) {
-        setUsername(username);
-        
-        const cache = await fetch(`http://54.226.5.241:8080/user/followtags/?username=${username}`)
-        .then((res) => {
-            return res.json();
-        })
-
-        setTags(cache);
-
-        const cache1 = await fetch(`http://54.226.5.241:8080/user/customtags/?username=${username}`)
-        .then((res) => {
-            return res.json();
-        })
-
-        setCustomTags(cache1);
-
-        return cache;
-    }
 }
 
 const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
@@ -143,17 +94,6 @@ const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
             </UserContext.Consumer>
         )
     }
-
-    // if (isReady)
-    // {
-    //     React.useEffect(() => {
-    //             const unsubscribe = navigation.addListener('focus', async () => {
-    //                 _cacheResourcesAsync(username);
-    //             });
-            
-    //             return unsubscribe;
-    //     }, [navigation]);
-    // }
     
     return(
         <Stack.Navigator screenOptions={{
