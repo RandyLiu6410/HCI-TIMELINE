@@ -12,7 +12,7 @@ export interface SortPopUpProps {
 }
 
 const SortPopUp: React.FC<SortPopUpProps> = (props) => {
-    const [checked, setChecked] = React.useState('new');
+    const [checked, setChecked] = React.useState('descending');
 
     function checkOnChange(status) {
         setChecked(status)
@@ -24,17 +24,17 @@ const SortPopUp: React.FC<SortPopUpProps> = (props) => {
             <View style={styles.content}>
                 <View style={styles.button}>
                     <RadioButton
-                        value="new"
-                        status={ checked === 'new' ? 'checked' : 'unchecked' }
-                        onPress={() => checkOnChange('new')}
+                        value="descending"
+                        status={ checked === 'descending' ? 'checked' : 'unchecked' }
+                        onPress={() => checkOnChange('ascending')}
                     />
                     <Text style={styles.buttonText}>New to Old</Text>
                 </View>
                 <View style={styles.button}>
                     <RadioButton
-                        value="old"
-                        status={ checked === 'old' ? 'checked' : 'unchecked' }
-                        onPress={() => checkOnChange('old')}
+                        value="ascending"
+                        status={ checked === 'ascending' ? 'checked' : 'unchecked' }
+                        onPress={() => checkOnChange('descending')}
                     />
                     <Text style={styles.buttonText}>Old to New</Text>
                 </View>

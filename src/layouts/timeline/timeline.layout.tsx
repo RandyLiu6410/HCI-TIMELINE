@@ -20,7 +20,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     const user = props.route.params.user;
     const navigation = useNavigation();
     const sortSheetRef = React.useRef(null);
-    const [sort, setSort] = React.useState('new');
+    const [sort, setSort] = React.useState('descending');
     // console.log(tag)
 
     function changeSort() {
@@ -38,7 +38,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                  marginRight={15}/>
                 <View style={styles.sort}>
                     {
-                        sort === 'new'
+                        sort === 'descending'
                         ?
                         <Text style={styles.sortText}>Latest</Text>
                         :
@@ -47,7 +47,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                     <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
                 </View>
             </View>
-            <Timeline tag={tag} followtime={followtime} user={user} cardOnPress={(news: NewsModel) => {
+            <Timeline tag={tag} followtime={followtime} user={user} order={sort} cardOnPress={(news: NewsModel) => {
                 navigation.navigate('News', { news: news });
                 addHistory(user.name, news.url);
             }}/>

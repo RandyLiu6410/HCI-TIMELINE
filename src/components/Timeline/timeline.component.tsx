@@ -56,6 +56,7 @@ export interface TimelineProps {
     cardOnPress: any;
     user: {name: string};
     followtime: string;
+    order: string;
 }
 
 const Timeline: React.FC<TimelineProps> = (props) => {
@@ -177,6 +178,7 @@ const Timeline: React.FC<TimelineProps> = (props) => {
 
     async function _cacheResourcesAsync() {
         const cacheNews = await fetch(`http://54.226.5.241:8080/news/tag?tag=${props.tag}&sort=descending&startIndex=${startIndex}&limit=20`)
+        // const cacheNews = await fetch(`http://54.226.5.241:8080/news/tag?tag=${props.tag}&sort=ascending&startIndex=${startIndex}&limit=20`)
         .then((res) => {
             return res.json();
         });
@@ -188,52 +190,103 @@ const Timeline: React.FC<TimelineProps> = (props) => {
                 return res.json();
             });
 
-            const indexes = cacheHistory.map(h => {
-                return cacheNews.findIndex(n => n.url === h);
-            })
-            .filter(i => i >= 0)
-            .sort((a, b) => {
-                return a - b;
-            });
+            if (props.order === 'descending') {
+                const indexes = cacheHistory.map(h => {
+                    return cacheNews.findIndex(n => n.url === h);
+                })
+                .filter(i => i >= 0)
+                .sort((a, b) => {
+                    return a - b;
+                });
 
-            var data_sort = [];
+                var data_sort = [];
 
-            var start = 0;
-            const end = cacheNews.length;
+                var start = 0;
+                const end = cacheNews.length;
 
-            indexes.map((i, index) => {
-                if(i === start)
+                indexes.map((i, index) => {
+                    if(i === start)
+                    {
+                        data_sort.push(cacheNews[i]);
+                    }
+                    else
+                    {
+                        data_sort.push({
+                            publishedAt: cacheNews[start].publishedAt,
+                            data: cacheNews.slice(start, i)
+                        });
+                        data_sort.push(cacheNews[i]);
+                    }
+
+                    start = i + 1;
+                })
+
+                if(indexes[indexes.length - 1] !== end - 1)
                 {
-                    data_sort.push(cacheNews[i]);
+                    data_sort.push({
+                        publishedAt: cacheNews[indexes[indexes.length - 1] + 1].publishedAt,
+                        data: cacheNews.slice(indexes[indexes.length - 1] + 1, end)
+                    });
+                }
+
+                if(sorteddata.length === 0)
+                {
+                    setSorteddata(data_sort);
                 }
                 else
                 {
+                    setSorteddata(sorteddata.concat(data_sort));
+                }
+            } else if (props.order === 'ascending') {
+                const indexes = cacheHistory.map(h => {
+                    return cacheNews.findIndex(n => n.url === h);
+                })
+                .filter(i => i >= 0)
+                .sort((a, b) => {
+                    return b - a;
+                });
+
+                var data_sort = [];
+
+                var start = 0;
+                const end = cacheNews.length;
+
+                indexes.map((i, index) => {
+                    if(i === start)
+                    {
+                        data_sort.push(cacheNews[i]);
+                    }
+                    else
+                    {
+                        data_sort.push({
+                            publishedAt: cacheNews[start].publishedAt,
+                            data: cacheNews.slice(start, i)
+                        });
+                        data_sort.push(cacheNews[i]);
+                    }
+
+                    start = i + 1;
+                })
+
+                if(indexes[indexes.length - 1] !== end - 1)
+                {
                     data_sort.push({
-                        publishedAt: cacheNews[start].publishedAt,
-                        data: cacheNews.slice(start, i)
+                        publishedAt: cacheNews[indexes[indexes.length - 1] + 1].publishedAt,
+                        data: cacheNews.slice(indexes[indexes.length - 1] + 1, end)
                     });
-                    data_sort.push(cacheNews[i]);
                 }
 
-                start = i + 1;
-            })
-
-            if(indexes[indexes.length - 1] !== end - 1)
-            {
-                data_sort.push({
-                    publishedAt: cacheNews[indexes[indexes.length - 1] + 1].publishedAt,
-                    data: cacheNews.slice(indexes[indexes.length - 1] + 1, end)
-                });
+                if(sorteddata.length === 0)
+                {
+                    setSorteddata(data_sort);
+                }
+                else
+                {
+                    setSorteddata(sorteddata.concat(data_sort));
+                }
             }
 
-            if(sorteddata.length === 0)
-            {
-                setSorteddata(data_sort);
-            }
-            else
-            {
-                setSorteddata(sorteddata.concat(data_sort));
-            }
+            
         }
         else
         {
