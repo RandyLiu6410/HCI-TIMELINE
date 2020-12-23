@@ -51,6 +51,20 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
         })
     }
 
+    function unfollowTag() {
+        fetch(`http://127.0.0.1/user/followtags?username=${user.name}&tag=${tag}`, {
+          method: 'DELETE'
+        })
+        .then((res) => {
+            if(res.ok)
+            {
+                setFollowing(false)
+            }
+        })
+        .catch((err) => {
+        })
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.back}>
@@ -58,8 +72,8 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
             </View>
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{'# ' + tag}</Text>
-                <TouchableOpacity onPress={() => followTag()} disabled={following}>
-                    <Text style={styles.followButton}>{following ? 'Following' : "Follow"}</Text>
+                <TouchableOpacity onPress={() => following ? unfollowTag() : followTag()} disabled={following}>
+                    <Text style={following ? styles.followingButton: styles.followButton}>{following ? 'Following' : "Follow"}</Text>
                 </TouchableOpacity>
                 <View style={styles.sort}>
                     {
@@ -148,6 +162,22 @@ const styles = StyleSheet.create({
         marginHorizontal: 20
     },
     followButton: {
+        borderRadius: 100,
+        backgroundColor: "#1DB5FF",
+        alignContent: "center",
+        justifyContent: "center",
+        color: "#E5E5E5",
+        fontSize: 10,
+        textAlign: "center",
+        paddingVertical: 5,
+        paddingHorizontal: 5,
+        marginHorizontal: 5,
+        width: 60,
+        alignSelf: 'flex-end',
+        marginVertical: 10,
+        marginRight: 15
+    },
+    followingButton: {
         borderRadius: 100,
         backgroundColor: "#424242",
         alignContent: "center",

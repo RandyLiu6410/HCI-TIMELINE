@@ -75,6 +75,8 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
     );
 }
 
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -4,7 +4,11 @@ TIMELINE
 
 ## Table of Contents
 
-[TOC]
+* [Table of Contents]
+* [Beginners Guide]
+* [User story]
+* [User flows]
+* [Limitations]
 
 ## Beginners Guide
 

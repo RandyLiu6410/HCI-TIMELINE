@@ -138,7 +138,7 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
         }}>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="News" component={NewsLayout} />
-            <Stack.Screen name="Timeline" component={TimelineLayout} />
+            <Stack.Screen name="Timeline"component={TimelineLayout} /> 
         </Stack.Navigator>
     );
 }

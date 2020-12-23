@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, processColor } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, processColor, KeyboardAvoidingView } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import BottomSheet from 'reanimated-bottom-sheet';
