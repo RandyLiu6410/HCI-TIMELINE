@@ -35,7 +35,7 @@ const MainCard: React.FC<MainCardProps> = (props) => {
                 </Card.Content>
                 <Card.Content style={styles.footer}>
                     <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
-                    <TagIcon color="#828282" size={20} onPress={() => props.tagOnPress(props.news)}/>
+                    {/* <TagIcon color="#828282" size={20} onPress={() => props.tagOnPress(props.news)}/> */}
                 </Card.Content>
             </Card>
         </View>

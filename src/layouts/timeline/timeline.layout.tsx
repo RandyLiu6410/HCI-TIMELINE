@@ -20,12 +20,13 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     const user = props.route.params.user;
     const customtag = props.route.params.customtag || false;
     const navigation = useNavigation();
-    const sortSheetRef = React.useRef(null);
+    // const sortSheetRef = React.useRef(null);
     const [sort, setSort] = React.useState('new');
     const [following, setFollowing] = React.useState(false);
 
     function changeSort() {
-        sortSheetRef.current.snapTo(0);
+        // sortSheetRef.current.snapTo(0);
+        sort === 'new' ? setSort('old'): setSort('new')
     }
 
     React.useEffect(() => {
@@ -52,7 +53,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     }
 
     function unfollowTag() {
-        fetch(`http://127.0.0.1/user/followtags?username=${user.name}&tag=${tag}`, {
+        fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
           method: 'DELETE'
         })
         .then((res) => {
@@ -91,12 +92,12 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
                 navigation.navigate('News', { news: news, user: user });
                 addHistory(user.name, news.url);
             }}/>
-            <SortPopUp
+            {/* <SortPopUp
                 sheetRef={sortSheetRef}
                 sortChanged={(status)=>{
                     setSort(status);
                     sortSheetRef.current.snapTo(1);
-            }}/>
+            }}/> */}
         </SafeAreaView>
     )
 
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     sort: {
         marginLeft: 'auto',
         marginRight: 15,
-        marginTop: -5,
+        marginTop: 2,
         flexDirection: 'row',
     },
     sortText: {

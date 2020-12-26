@@ -219,6 +219,8 @@ const Login: React.FC<LoginProps> = (props) => {
       res.json().then((m) => setMessage(m));
     })
     .catch((err) => {
+      // throw new Error(err);
+      
     })
   }
 
@@ -240,6 +242,7 @@ const Login: React.FC<LoginProps> = (props) => {
       }
     })
     .catch((err) => {
+      // throw new Error(err);
     })
   }
 }
