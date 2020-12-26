@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, processColor, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, processColor, KeyboardAvoidingView, Platform } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -168,7 +168,9 @@ const Login: React.FC<LoginProps> = (props) => {
     return <AppLoading />;
   } else {
       return (
-          <View style={styles.container}>
+        <KeyboardAvoidingView
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
             <View style={styles.loginview}>
               <Text style={styles.appNameLarge}>TIMELINE</Text>
               <TextInput 
@@ -204,7 +206,7 @@ const Login: React.FC<LoginProps> = (props) => {
               renderContent={renderContent}
               initialSnap={1}
             />
-          </View>
+          </KeyboardAvoidingView>
       );
   }
 
@@ -245,7 +247,7 @@ const Login: React.FC<LoginProps> = (props) => {
 export default function App() {
   const [authorized, setAuthorized] = React.useState(false);
   const [username, setUsername] = React.useState('');
-
+  
   if(authorized)
   {
     return(
