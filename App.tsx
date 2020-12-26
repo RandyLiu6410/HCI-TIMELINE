@@ -217,6 +217,8 @@ const Login: React.FC<LoginProps> = (props) => {
       res.json().then((m) => setMessage(m));
     })
     .catch((err) => {
+      // throw new Error(err);
+      
     })
   }
 
@@ -238,6 +240,7 @@ const Login: React.FC<LoginProps> = (props) => {
       }
     })
     .catch((err) => {
+      // throw new Error(err);
     })
   }
 }
@@ -245,6 +248,14 @@ const Login: React.FC<LoginProps> = (props) => {
 export default function App() {
   const [authorized, setAuthorized] = React.useState(false);
   const [username, setUsername] = React.useState('');
+
+  // return(
+  //   <UserContext.Provider value={{
+  //     name: 'Peiyi'
+  //   }}>
+  //     <Home />
+  //   </UserContext.Provider>
+  // )
 
   if(authorized)
   {
