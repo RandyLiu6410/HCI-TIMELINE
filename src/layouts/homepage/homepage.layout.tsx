@@ -131,14 +131,13 @@ const HomepageLayout: React.FC<HomepageLayoutProps> = (props) => {
                         hasChild={false}
                         child={""}
                         previous={previous}
-                        navigation={navigation}
                     />
                 );
             }
-        }}>
+        }} headerMode="screen">
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="News" component={NewsLayout} />
-            <Stack.Screen name="Timeline"component={TimelineLayout} /> 
+            <Stack.Screen name="Timeline" component={TimelineLayout} options={{headerShown: false}}/> 
         </Stack.Navigator>
     );
 }

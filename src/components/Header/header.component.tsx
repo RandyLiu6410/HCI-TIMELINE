@@ -24,29 +24,26 @@ const Header: React.FC<HeaderProps> = (props) => {
         'Gobold': require('../../../assets/fonts/gobold/GoboldBold.otf')
     });
 
-    // if (!fontsLoaded) {
-    //     return <AppLoading />;
-    // } else {
-        return (
-            <View style={styles.container}>
-                {
-                    props.previous ? 
-                    <View style={styles.backButton}>
-                        <BackIcon onPress={navigation.goBack} color="#C4C4C4" size={20}/> 
-                    </View>
-                    : <View />
-                }
-                {props.hasChild ?
+    return (
+        <View style={styles.container}>
+            {
+                props.previous ? 
+                <View style={styles.backButton}>
+                    <BackIcon onPress={navigation.goBack} color="#C4C4C4" size={20}/> 
+                </View>
+                : <View />
+            }
+            {
+                props.hasChild ?
                 <React.Fragment>
                     <Text style={styles.appNameSmall}>TIMELINE</Text>
                     <Text style={styles.childName}>{props.child}</Text>  
                 </React.Fragment>
                 :
                 <Text style={styles.appNameLarge}>TIMELINE</Text>
-                }
-            </View>
-        );
-    // }
+            }
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

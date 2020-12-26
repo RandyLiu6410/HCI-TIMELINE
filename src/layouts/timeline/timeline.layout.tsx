@@ -3,7 +3,6 @@ import { Dimensions, StyleSheet, Text, View, Image, SafeAreaView, ScrollView, To
 import Timeline from '../../components/Timeline/timeline.component';
 import { useNavigation } from '@react-navigation/native';
 
-import Header from '../../components/Header/header.component';
 import BackIcon from '../../components/Icon/back.component';
 import TextButton from '../../components/Button/textButton.component';
 import SortIcon from '../../components/Icon/sort.component';
@@ -30,40 +29,86 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     }
 
     React.useEffect(() => {
-        fetch(`http://54.226.5.241:8080/user/checkfollow?username=${user.name}&tag=${tag}`)
-        .then((res) => {
-            res.json().then(result => setFollowing(result));
-        })
-        .catch((err) => {
-        })
+        if(customtag)
+        {
+            fetch(`http://54.226.5.241:8080/user/checkfollow?username=${user.name}&tag=${tag}&customtag=true`)
+            .then((res) => {
+                res.json().then(result => setFollowing(result));
+            })
+            .catch((err) => {
+            })
+        }
+        else
+        {
+            fetch(`http://54.226.5.241:8080/user/checkfollow?username=${user.name}&tag=${tag}`)
+            .then((res) => {
+                res.json().then(result => setFollowing(result));
+            })
+            .catch((err) => {
+            })
+        }
     }, [following])
 
     function followTag() {
-        fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
-          method: 'POST'
-        })
-        .then((res) => {
-            if(res.ok)
-            {
-                setFollowing(true)
-            }
-        })
-        .catch((err) => {
-        })
+        if(customtag)
+        {
+            fetch(`http://54.226.5.241:8080/user/customtags?username=${user.name}&tag=${tag}`, {
+              method: 'POST'
+            })
+            .then((res) => {
+                if(res.ok)
+                {
+                    setFollowing(true)
+                }
+            })
+            .catch((err) => {
+            })
+        }
+        else
+        {
+            fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
+              method: 'POST'
+            })
+            .then((res) => {
+                if(res.ok)
+                {
+                    setFollowing(true)
+                }
+            })
+            .catch((err) => {
+            })
+        }
     }
 
     function unfollowTag() {
-        fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
-          method: 'DELETE'
-        })
-        .then((res) => {
-            if(res.ok)
-            {
-                setFollowing(false)
-            }
-        })
-        .catch((err) => {
-        })
+        if(customtag)
+        {
+            fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}&customtag=true`, {
+              method: 'DELETE'
+            })
+            .then((res) => {
+                if(res.ok)
+                {
+                    setFollowing(false)
+                }
+            })
+            .catch((err) => {
+            })
+        }
+        else
+        {
+            fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
+              method: 'DELETE'
+            })
+            .then((res) => {
+                if(res.ok)
+                {
+                    setFollowing(false)
+                }
+            })
+            .catch((err) => {
+            })
+        }
     }
 
     return(
@@ -73,7 +118,7 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
             </View>
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{'# ' + tag}</Text>
-                <TouchableOpacity onPress={() => following ? unfollowTag() : followTag()} disabled={following}>
+                <TouchableOpacity onPress={() => following ? unfollowTag() : followTag()}>
                     <Text style={following ? styles.followingButton: styles.followButton}>{following ? 'Following' : "Follow"}</Text>
                 </TouchableOpacity>
                 <View style={styles.sort}>
