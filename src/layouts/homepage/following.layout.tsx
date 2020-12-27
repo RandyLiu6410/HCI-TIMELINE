@@ -73,7 +73,7 @@ const FollowingLayout: React.FC<FollowingLayoutProps> = (props) => {
                     })
                 }
             </ScrollView>
-            <TagPopUp 
+            {/* <TagPopUp 
                 sheetRef={tagSheetRef}
                 news={news}
                 user={props.user}
@@ -84,7 +84,7 @@ const FollowingLayout: React.FC<FollowingLayoutProps> = (props) => {
                     
                     setTimeout(() => notificationSheetRef.current.snapTo(1), 1000);
                 }}
-            />
+            /> */}
             <Notification sheetRef={notificationSheetRef} message={notification}/>
         </View>
     );
