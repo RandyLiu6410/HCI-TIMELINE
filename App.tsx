@@ -1,5 +1,6 @@
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Remote debugger']);
+LogBox.ignoreAllLogs(true);
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, processColor, KeyboardAvoidingView, Platform } from 'react-native';
