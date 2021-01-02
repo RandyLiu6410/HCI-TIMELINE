@@ -125,8 +125,8 @@ const Timeline: React.FC<TimelineProps> = (props) => {
             <TimelineList 
                 style={styles.list}
                 data={fetchData.sorteddata}
-                circleSize={18}
-                dotSize={10}
+                circleSize={16}
+                dotSize={9}
                 dotColor='#000000'
                 circleColor='#FFFFFF'
                 lineColor='#FFFFFF'

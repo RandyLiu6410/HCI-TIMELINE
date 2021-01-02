@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         lineHeight: 14,
         color: "#C1C1C1",
-        marginTop: 5
+        marginTop: 15
     },
     title: {
         fontSize: 18,
@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
-        marginTop: 10
+        marginTop: 10,
+        marginBottom: -5
     },
     tag: {
         borderRadius: 100,

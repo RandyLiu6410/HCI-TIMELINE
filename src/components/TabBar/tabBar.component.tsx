@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     },
     tabName: {
         // fontFamily: "Noto Sans",
-        fontSize: 16,
+        fontSize: 18,
         position: "absolute",
         lineHeight: 22,
         // right: 318,

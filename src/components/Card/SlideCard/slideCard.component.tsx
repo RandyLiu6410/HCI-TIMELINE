@@ -6,6 +6,9 @@ import NewsModel from '../../../model/news.model';
 
 import moment from 'moment';
 
+import MoreIcon from '../../Icon/more.component';
+import { CardStyleInterpolators } from '@react-navigation/stack';
+
 const SLIDER_HEIGHT = Dimensions.get('window').height * 0.3;
 const SLIDER_WIDTH = Dimensions.get('window').width * 0.7;
 const ITEM_WIDTH = Math.round(Dimensions.get('window').width * 0.7);
@@ -82,9 +85,16 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
                         </View>
                         <Card.Content style={styles.tags}>
                             {
-                                item.tags.map((t: string, index: number) => {
+                                item.tags.slice(0, 2).map((t: string, index: number) => {
                                     return <Text key={index} style={styles.tag} >{'# ' + t}</Text>
                                 })
+                            }
+                            {
+                                item.tags.length > 2
+                                ?
+                                <Text style={styles.more}>...</Text>
+                                :
+                                <></>
                             }
                         </Card.Content>
                         <Card.Content style={styles.footer}>
@@ -154,6 +164,7 @@ const styles = StyleSheet.create({
         borderColor: '#7B40DC',
         borderWidth: 1,
         borderRadius: 10,
+        flexWrap: 'wrap'
     },
     content: {
         flexDirection: 'row',
@@ -164,7 +175,8 @@ const styles = StyleSheet.create({
     image: {
         resizeMode: 'contain',
         width: '30%',
-        height: '100%'
+        height: '100%',
+        flexShrink: 0.5
     },
     source: {
         fontSize: 10,
@@ -193,6 +205,10 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         marginRight: 6,
         marginTop: 3
+    },
+    more: {
+        fontSize: 10, 
+        color: '#C4C4C4'
     },
     time: {
         // fontFamily: "Noto Sans",

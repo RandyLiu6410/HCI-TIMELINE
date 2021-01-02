@@ -16,10 +16,10 @@ const NavigationBar: React.FC<NavigationBarProps> = (props) => {
 
     return(
         <View style={styles.container}>
-            <IconButton icon="home" color="#828282" size={24} onPress={() => navigate}/>
+            <IconButton icon="HomeOutlined" color="#828282" size={24} onPress={() => navigate}/>
             <IconButton icon="hash" color="#828282" size={24} onPress={() => navigate}/>
-            <IconButton icon="search" color="#828282" size={24} onPress={() => navigate}/>
-            <IconButton icon="user" color="#828282" size={24} onPress={() => navigate}/>
+            <IconButton icon="SearchOutlined" color="#828282" size={24} onPress={() => navigate}/>
+            <IconButton icon="UserOutlined" color="#828282" size={24} onPress={() => navigate}/>
         </View>
     );
 }

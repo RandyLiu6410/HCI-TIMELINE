@@ -147,7 +147,9 @@ const styles = StyleSheet.create({
     },
     source: {
         fontSize: 10,
-        color: "#C1C1C1"
+        color: "#C1C1C1",
+        marginTop: -5,
+        marginBottom: 5
     },
     title: {
         fontSize: 18,
