@@ -118,18 +118,20 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
             </View>
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{'# ' + tag}</Text>
-                <TouchableOpacity onPress={() => following ? unfollowTag() : followTag()}>
-                    <Text style={following ? styles.followingButton: styles.followButton}>{following ? 'Following' : "Follow"}</Text>
-                </TouchableOpacity>
-                <View style={styles.sort}>
-                    {
-                        sort === 'new'
-                        ?
-                        <Text style={styles.sortText}>Latest</Text>
-                        :
-                        <Text style={styles.sortText}>Oldest</Text>
-                    }
-                    <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
+                <View style={styles.wrapperFooter}>
+                    <TouchableOpacity onPress={() => following ? unfollowTag() : followTag()}>
+                        <Text style={following ? styles.followingButton: styles.followButton}>{following ? 'Following' : "Follow"}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.sort}>
+                        {
+                            sort === 'new'
+                            ?
+                            <Text style={styles.sortText}>Latest</Text>
+                            :
+                            <Text style={styles.sortText}>Oldest</Text>
+                        }
+                        <SortIcon size={23} color={'#C4C4C4'} onPress={changeSort}></SortIcon>
+                    </View>
                 </View>
             </View>
             <Timeline sort={sort} customtag={customtag} tag={tag} followtime={followtime} user={user} 
@@ -170,6 +172,9 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         backgroundColor: '#101010'
     },
+    wrapperFooter: {
+        flexDirection: 'row'
+    },
     title: {
         color: '#FFFFFF',
         textAlign: 'right',
@@ -183,8 +188,9 @@ const styles = StyleSheet.create({
     sort: {
         marginLeft: 'auto',
         marginRight: 15,
-        marginTop: 2,
+        marginBottom: 10,
         flexDirection: 'row',
+        alignSelf: 'flex-end'
     },
     sortText: {
         color: '#FFFFFF',

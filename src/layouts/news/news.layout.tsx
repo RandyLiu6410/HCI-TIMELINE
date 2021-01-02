@@ -11,12 +11,9 @@ import NewsModel from '../../model/news.model';
 import TagPopUp from '../../components/TagPopUp/tagPopUp.component';
 import Notification from '../../components/Notification/notification.component';
 import ConfirmIcon from '../../components/Icon/confirm.component';
-
-import TimelineLayout from '../timeline/timeline.layout';
-import { add } from 'react-native-reanimated';
-
 import { Button, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { Provider as PaperProvider } from 'react-native-paper';
+import moment from 'moment';
 
 const win = Dimensions.get('window');
 const ratio = win.width / 540;
@@ -28,7 +25,8 @@ export interface NewsLayoutProps {
 
 const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
     const news: NewsModel = props.route.params.news;
-    const time = (new Date()).getTime() - (new Date(news.publishedAt)).getTime();
+    const date = new Date(news.publishedAt);
+    const time = (new Date()).getTime() - date.getTime();
     // const tagSheetRef = React.useRef(null);
     const notificationSheetRef = React.useRef(null);
     const [notification, setNotification] = React.useState('');
@@ -50,8 +48,8 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                     <Text style={styles.source}>{news.source}</Text>
                     <Text style={styles.title}>{news.title}</Text>
                     <View style={styles.grid}>
+                        <Text style={styles.update}>{moment(date).format('YYYY/MM/DD hh:mm')}</Text>
                         <Text style={styles.update}>Updated {Math.round(time / 3600000)} hours ago</Text>
-                        {/* <TagIcon color="#828282" size={16} onPress={() => tagSheetRef.current.snapTo(0)}/> */}
                     </View>
                 
                     <Portal>

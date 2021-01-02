@@ -68,20 +68,30 @@ const Timeline: React.FC<TimelineProps> = (props) => {
       }
 
     function renderTime(rowData) {
-        const time = new Date(rowData.publishedAt);
-        const year = time.getFullYear();
-        const month = time.getMonth() + 1;
-        const date = time.getDate();
-        const hours = time.getHours();
-        const minutes = time.getMinutes();
-        
-        return (
-            <View style={{alignItems: 'center', width: 50}}>
-                <Text style={styles.year}>{year}/</Text>
-                <Text style={styles.date}>{month}/{date}</Text>
-                <Text style={styles.time}>{hours < 10 ? '0'+hours.toString() : hours }:{minutes < 10 ? '0'+minutes.toString() : minutes}</Text>
-            </View>
-        )
+        if(rowData.publishedAt_new !== '')
+        {
+            const time = new Date(rowData.publishedAt_new);
+            const year = time.getFullYear();
+            const month = time.getMonth() + 1;
+            const date = time.getDate();
+            const hours = time.getHours();
+            const minutes = time.getMinutes();
+            
+            return (
+                <View style={{alignItems: 'center', width: 50}}>
+                    <Text style={styles.year}>{year}/</Text>
+                    <Text style={styles.date}>{month}/{date}</Text>
+                    {/* <Text style={styles.time}>{hours < 10 ? '0'+hours.toString() : hours }:{minutes < 10 ? '0'+minutes.toString() : minutes}</Text> */}
+                </View>
+            )
+        }
+        else
+        {
+            return (
+                <View style={{alignItems: 'center', width: 50}}>
+                </View>
+            )
+        }
     }
 
     function renderDetail(rowData) {
@@ -181,18 +191,51 @@ const Timeline: React.FC<TimelineProps> = (props) => {
                 var start = 0;
                 const end = cacheNews.length;
 
-                indexes.map((i, index) => {
+                indexes.map(i => {
                     if(i === start)
                     {
-                        data_sort.push(cacheNews[i]);
+                        data_sort.push({...cacheNews[i], publishedAt_new: cacheNews[i].publishedAt});
                     }
                     else
                     {
-                        data_sort.push({
-                            publishedAt: cacheNews[start].publishedAt,
-                            data: cacheNews.slice(start, i)
-                        });
-                        data_sort.push(cacheNews[i]);
+                        const _data = cacheNews.slice(start, i);
+                        var _start_index = 0;
+                        for(let j = 0; j < _data.length; j++)
+                        {
+                            const dd_last = (new Date(_data[_start_index].publishedAt)).getDate();
+                            const dd = (new Date(_data[j].publishedAt)).getDate();
+
+                            if(dd_last !== dd)
+                            {
+                                data_sort.push({
+                                    publishedAt_new: _data[_start_index].publishedAt,
+                                    data: _data.slice(_start_index, j)
+                                });
+
+                                if(j === _data.length - 1)
+                                {
+                                    data_sort.push({
+                                        publishedAt_new: _data[j].publishedAt,
+                                        data: [_data[j]]
+                                    });
+                                }
+
+                                _start_index = j;
+                            }
+                            else if (j === _data.length - 1)
+                            {
+                                data_sort.push({
+                                    publishedAt_new: _data[_start_index].publishedAt,
+                                    data: _data.slice(_start_index, j + 1)
+                                });
+                            }
+                        }
+
+                        // data_sort.push({
+                        //     publishedAt: cacheNews[start].publishedAt,
+                        //     data: cacheNews.slice(start, i)
+                        // });
+                        data_sort.push({...cacheNews[i], publishedAt_new: cacheNews[i].publishedAt});
                     }
 
                     start = i + 1;
@@ -200,12 +243,43 @@ const Timeline: React.FC<TimelineProps> = (props) => {
 
                 if(indexes[indexes.length - 1] !== end - 1)
                 {
-                    console.log(indexes)
-                    console.log(cacheNews[indexes[indexes.length - 1] + 1])
-                    data_sort.push({
-                        publishedAt: cacheNews[indexes[indexes.length - 1] + 1].publishedAt,
-                        data: cacheNews.slice(indexes[indexes.length - 1] + 1, end)
-                    });
+                    const _data = cacheNews.slice(indexes[indexes.length - 1] + 1, end);
+                    var _start_index = 0;
+                    for(let j = 0; j < _data.length; j++)
+                    {
+                        const dd_last = (new Date(_data[_start_index].publishedAt)).getDate();
+                        const dd = (new Date(_data[j].publishedAt)).getDate();
+
+                        if(dd_last !== dd)
+                        {
+                            data_sort.push({
+                                publishedAt_new: _data[_start_index].publishedAt,
+                                data: _data.slice(_start_index, j)
+                            });
+
+                            if(j === _data.length - 1)
+                            {
+                                data_sort.push({
+                                    publishedAt_new: _data[j].publishedAt,
+                                    data: [_data[j]]
+                                });
+                            }
+
+                            _start_index = j;
+                        }
+                        else if (j === _data.length - 1)
+                        {
+                            data_sort.push({
+                                publishedAt_new: _data[_start_index].publishedAt,
+                                data: _data.slice(_start_index, j + 1)
+                            });
+                        }
+                    }
+
+                    // data_sort.push({
+                    //     publishedAt_new: cacheNews[indexes[indexes.length - 1] + 1].publishedAt,
+                    //     data: cacheNews.slice(indexes[indexes.length - 1] + 1, end)
+                    // });
                 }
 
                 if(fetchData.sorteddata.length === 0)
@@ -227,10 +301,42 @@ const Timeline: React.FC<TimelineProps> = (props) => {
             {
                 var data_sort = [];
 
-                data_sort.push({
-                    publishedAt: cacheNews[0].publishedAt,
-                    data: cacheNews
-                })
+                var _start_index = 0;
+                for(let j = 0; j < cacheNews.length; j++)
+                {
+                    const dd_last = (new Date(cacheNews[_start_index].publishedAt)).getDate();
+                    const dd = (new Date(cacheNews[j].publishedAt)).getDate();
+
+                    if(dd_last !== dd)
+                    {
+                        data_sort.push({
+                            publishedAt_new: cacheNews[_start_index].publishedAt,
+                            data: cacheNews.slice(_start_index, j)
+                        });
+
+                        if(j === cacheNews.length - 1)
+                        {
+                            data_sort.push({
+                                publishedAt_new: cacheNews[j].publishedAt,
+                                data: [cacheNews[j]]
+                            });
+                        }
+
+                        _start_index = j;
+                    }
+                    else if (j === cacheNews.length - 1)
+                    {
+                        data_sort.push({
+                            publishedAt_new: cacheNews[_start_index].publishedAt,
+                            data: cacheNews.slice(_start_index, j + 1)
+                        });
+                    }
+                }
+
+                // data_sort.push({
+                //     publishedAt: cacheNews[0].publishedAt,
+                //     data: cacheNews
+                // })
 
                 if(fetchData.sorteddata.length === 0)
                 {
@@ -252,15 +358,65 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         {
             if(fetchData.sorteddata.length === 0)
             {
+                const sortedNews = cacheNews.map((n, index) => {
+                    if(index !== 0) {
+                        const dd_last = (new Date(cacheNews[index - 1].publishedAt)).getDate();
+                        const dd = (new Date(n.publishedAt)).getDate();
+
+                        if(dd_last === dd)
+                        {
+                            return {...n, publishedAt_new: ''};
+                        }
+                        else
+                        {
+                            return {...n, publishedAt_new: n.publishedAt};
+                        }
+                    }
+                    else 
+                    {
+                        return {...n, publishedAt_new: n.publishedAt};
+                    }
+                });
+
                 setFetchData({
-                    sorteddata: cacheNews,
+                    sorteddata: sortedNews,
                     startIndex: fetchData.startIndex + 20
                 })
             }
             else
             {
+                const sortedNews = cacheNews.map((n, index) => {
+                    if(index !== 0) {
+                        const dd_last = (new Date(cacheNews[index - 1].publishedAt)).getDate();
+                        const dd = (new Date(n.publishedAt)).getDate();
+
+                        if(dd_last === dd)
+                        {
+                            return {...n, publishedAt_new: ''};
+                        }
+                        else
+                        {
+                            return {...n, publishedAt_new: n.publishedAt};
+                        }
+                    }
+                    else 
+                    {
+                        const dd_last = (new Date(fetchData.sorteddata[fetchData.sorteddata.length - 1].publishedAt)).getDate();
+                        const dd = (new Date(n.publishedAt)).getDate();
+
+                        if(dd_last === dd)
+                        {
+                            return {...n, publishedAt_new: ''};
+                        }
+                        else
+                        {
+                            return {...n, publishedAt_new: n.publishedAt};
+                        }
+                    }
+                });
+
                 setFetchData({
-                    sorteddata: fetchData.sorteddata.concat(cacheNews),
+                    sorteddata: fetchData.sorteddata.concat(sortedNews),
                     startIndex: fetchData.startIndex + 20
                 })
             }
@@ -269,6 +425,8 @@ const Timeline: React.FC<TimelineProps> = (props) => {
         return cacheNews;
     }
 }
+
+
 
 const styles = StyleSheet.create({
     container: {

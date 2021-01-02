@@ -2,8 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, Headline } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
-import { scrollInterpolator, animatedStyles } from '../../../utils/animation';
 import NewsModel from '../../../model/news.model';
+
+import moment from 'moment';
 
 const SLIDER_HEIGHT = Dimensions.get('window').height * 0.3;
 const SLIDER_WIDTH = Dimensions.get('window').width * 0.7;
@@ -65,7 +66,8 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
     const carouselRef = React.useRef(null);
 
     function renderItem({item, index}: {item: NewsModel, index: number}) {
-        const time = (new Date()).getTime() - (new Date(item.publishedAt)).getTime();
+        const date = new Date(item.publishedAt);
+        const time = (new Date()).getTime() - date.getTime();
 
         return (
             <View style={styles.itemContainer}>
@@ -74,7 +76,7 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
                         <View style={styles.content}>
                             <Card.Content style={{width: '70%'}}>
                                 <Title style={styles.source}>{item.source}</Title>
-                                <Headline style={styles.title}>{item.title}</Headline>
+                                <Headline style={styles.title}>{item.title.length >= 100 ? item.title.slice(0, 101) + '...' : item.title }</Headline>
                             </Card.Content>
                             <Card.Cover style={styles.image} source={{ uri: item.urlToImage }} />
                         </View>
@@ -86,6 +88,7 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
                             }
                         </Card.Content>
                         <Card.Content style={styles.footer}>
+                            <Paragraph style={styles.time}>{moment(date).format('YYYY/MM/DD hh:mm')}</Paragraph>
                             <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
                         </Card.Content>
                     </Card>
@@ -124,6 +127,7 @@ const styles = StyleSheet.create({
     },
     card: {
         width: "90%",
+        height: 180,
         backgroundColor: "#141414",
         borderColor: '#7B40DC',
         borderWidth: 1,
@@ -132,7 +136,8 @@ const styles = StyleSheet.create({
     content: {
         flexDirection: 'row',
         marginTop: 10,
-        marginRight: 10
+        marginRight: 10,
+        height: 100
     },
     image: {
         resizeMode: 'contain',

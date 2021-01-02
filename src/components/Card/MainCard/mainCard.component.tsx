@@ -4,6 +4,7 @@ import { Dimensions } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, Headline } from 'react-native-paper';
 import TagIcon from '../../Icon/tag.component';
 import NewsModel from '../../../model/news.model';
+import moment from 'moment';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -16,7 +17,8 @@ export interface MainCardProps {
 }
 
 const MainCard: React.FC<MainCardProps> = (props) => {
-    const time = (new Date()).getTime() - (new Date(props.news.publishedAt)).getTime();
+    const date = new Date(props.news.publishedAt);
+    const time = (new Date()).getTime() - date.getTime();
 
     return(
         <View style={styles.container}>
@@ -34,8 +36,8 @@ const MainCard: React.FC<MainCardProps> = (props) => {
                     }
                 </Card.Content>
                 <Card.Content style={styles.footer}>
+                    <Paragraph style={styles.time}>{moment(date).format('YYYY/MM/DD hh:mm')}</Paragraph>
                     <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
-                    {/* <TagIcon color="#828282" size={20} onPress={() => props.tagOnPress(props.news)}/> */}
                 </Card.Content>
             </Card>
         </View>
