@@ -46,7 +46,7 @@ const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
                         }
                         
                     </View>
-                    <Text style={styles.title}>Tags You Made</Text>
+                    {/* <Text style={styles.title}>Tags You Made</Text>
                     <View style={styles.content}>
                         {    
                             props.customTags.map((t, index) => {
@@ -60,7 +60,7 @@ const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
                             })
                         }
                         
-                    </View>
+                    </View> */}
                 </ScrollView>
             </SafeAreaView>
         )}

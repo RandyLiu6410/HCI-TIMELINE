@@ -69,7 +69,7 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                                         {
                                             value !== "" ? 
                                             <ConfirmIcon onPress={() => {
-                                                fetch(`http://54.226.5.241:8080/user/customtags?username=${props.route.params.user.name}&tag=${value}`, {
+                                                fetch(`http://54.226.5.241:8080/user/followtags?username=${props.route.params.user.name}&tag=${value}`, {
                                                 method: 'POST'
                                                 })
                                                 .then((res) => {

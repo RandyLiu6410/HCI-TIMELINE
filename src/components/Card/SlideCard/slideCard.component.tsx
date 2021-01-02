@@ -89,7 +89,29 @@ const SlideCard: React.FC<SlideCardProps> = (props) => {
                         </Card.Content>
                         <Card.Content style={styles.footer}>
                             <Paragraph style={styles.time}>{moment(date).format('YYYY/MM/DD hh:mm')}</Paragraph>
-                            <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
+                            {
+                                time > 24 * 3600000
+                                ?
+                                <Paragraph style={styles.time}>{Math.round(time / 3600000 / 24)}
+                                {
+                                    Math.round(time / 3600000 / 24) > 1
+                                    ?
+                                    " days ago"
+                                    :
+                                    " day ago"
+                                }
+                                </Paragraph>
+                                :
+                                <Paragraph style={styles.time}>{Math.round(time / 3600000)} 
+                                {
+                                    Math.round(time / 3600000) > 1
+                                    ?
+                                    " hours ago"
+                                    :
+                                    " hour ago"
+                                }
+                                </Paragraph>
+                            }
                         </Card.Content>
                     </Card>
                 </TouchableOpacity>
