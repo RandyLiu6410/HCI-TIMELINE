@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     appNameLarge: {
         fontFamily: "Audrey",
         fontSize: 30,
-        marginTop: 11.5, //incorrect
         color: "#FFFFFF",
         alignSelf: 'center'
     },

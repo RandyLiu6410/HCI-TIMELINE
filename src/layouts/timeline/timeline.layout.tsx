@@ -115,9 +115,9 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.back}>
                 <BackIcon size={20} color={'#C4C4C4'} onPress={()=>(navigation.goBack())}></BackIcon>
+                <Text style={styles.title}>{'# ' + tag}</Text>
             </View>
             <View style={styles.wrapper}>
-                <Text style={styles.title}>{'# ' + tag}</Text>
                 <View style={styles.wrapperFooter}>
                     <TouchableOpacity onPress={() => following ? unfollowTag() : followTag()}>
                         <Text style={following ? styles.followingButton: styles.followButton}>{following ? 'Following' : "Follow"}</Text>
@@ -169,8 +169,7 @@ const styles = StyleSheet.create({
         height: "60%",
     },
     wrapper: {
-        marginLeft: 'auto',
-        backgroundColor: '#101010'
+        marginLeft: 'auto'
     },
     wrapperFooter: {
         flexDirection: 'row'
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontFamily: 'Gobold',
         // fontWeight: 'bold',
-        marginTop: -20,
+        // marginTop: -20,
         marginRight: 15,
         marginBottom: 5
     },
@@ -199,9 +198,10 @@ const styles = StyleSheet.create({
         marginTop: 3
     },
     back: {
-        marginTop: 18.62,
-        marginLeft: 19,
-        backgroundColor: '#101010'
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginHorizontal: 10
     },
     content: {
         margin: 40,

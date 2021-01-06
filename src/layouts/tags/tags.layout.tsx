@@ -23,12 +23,11 @@ const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
     return(
         <UserContext.Consumer>
         {user => (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <Header
                     hasChild={true}
                     child={"TAGs"}
                     previous={null}
-                    navigation={navigation}
                 />
                 <ScrollView style={styles.scrollView}>
                     <Text style={styles.title}>Tags You Follow</Text>
@@ -62,7 +61,7 @@ const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
                         
                     </View>
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         )}
         </UserContext.Consumer>
     );
@@ -101,12 +100,6 @@ const TagsLayout: React.FC<TagsLayoutProps> = (props) => {
         <Stack.Navigator screenOptions={{
             header: ({ scene, previous, navigation }) => {
                 return (
-                    // <Header
-                    //     hasChild={true}
-                    //     child={"TAGs"}
-                    //     previous={previous}
-                    //     navigation={navigation}
-                    // />
                     <></>
                 );
                 
