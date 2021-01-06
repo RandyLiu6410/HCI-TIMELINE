@@ -43,7 +43,17 @@ const TagsScreen: React.FC<TagsLayoutProps> = (props) => {
                                 )
                             })
                         }
-                        
+                        {    
+                            props.customTags.map((t, index) => {
+                                return(
+                                    <TouchableOpacity key={index} style={styles.hashWrapper} 
+                                    onPress={()=>navigation.navigate('Timeline', {customtag: true, tag: t.tag, followtime: t.followtime, user: user})}>
+                                        <Text style={styles.hash}>{'# '}</Text>
+                                        <Text style={styles.hashContent}>{t.tag}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
                     </View>
                     {/* <Text style={styles.title}>Tags You Made</Text>
                     <View style={styles.content}>
