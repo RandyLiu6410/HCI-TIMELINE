@@ -37,7 +37,29 @@ const MainCard: React.FC<MainCardProps> = (props) => {
                 </Card.Content>
                 <Card.Content style={styles.footer}>
                     <Paragraph style={styles.time}>{moment(date).format('YYYY/MM/DD hh:mm')}</Paragraph>
-                    <Paragraph style={styles.time}>{Math.round(time / 3600000)} hours ago</Paragraph>
+                    {
+                        time > 24 * 3600000
+                        ?
+                        <Paragraph style={styles.time}>{Math.round(time / 3600000 / 24)}
+                        {
+                            Math.round(time / 3600000 / 24) > 1
+                            ?
+                            " days ago"
+                            :
+                            " day ago"
+                        }
+                        </Paragraph>
+                        :
+                        <Paragraph style={styles.time}>{Math.round(time / 3600000)} 
+                        {
+                            Math.round(time / 3600000) > 1
+                            ?
+                            " hours ago"
+                            :
+                            " hour ago"
+                        }
+                        </Paragraph>
+                    }
                 </Card.Content>
             </Card>
         </View>
@@ -64,7 +86,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         lineHeight: 14,
         color: "#C1C1C1",
-        marginTop: 5
+        marginTop: 15
     },
     title: {
         fontSize: 18,
@@ -75,7 +97,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
-        marginTop: 10
+        marginTop: 10,
+        marginBottom: -5
     },
     tag: {
         borderRadius: 100,

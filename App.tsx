@@ -8,6 +8,7 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import BottomSheet from 'reanimated-bottom-sheet';
 
+import { Feather } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AppLoading } from 'expo';
 import { useFonts } from 'expo-font';
@@ -47,14 +48,14 @@ const Home: React.FC<HomeProps> = (props) => {
         <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
-            return <FontAwesome5 name={route.name} size={size} color={color} />;
+            return <Feather name={route.name} size={size} color={color} />;
           }
         })}
         tabBarOptions={{
           activeTintColor: '#4D7AEE',
           inactiveTintColor: 'gray',
           showLabel: false,
-          style: {backgroundColor: '#101010'}
+          style: {backgroundColor: '#101010', marginVertical: 8}
         }}
         >
           <Tab.Screen name="home" component={HomepageLayout} listeners={{
@@ -62,7 +63,7 @@ const Home: React.FC<HomeProps> = (props) => {
               setMainRoute(true);
             }
           }}/>
-          <Tab.Screen name="hashtag" component={TagsLayout} listeners={{
+          <Tab.Screen name="hash" component={TagsLayout} listeners={{
             focus: e => {
               setMainRoute(false);
               setRouteChild("TAGs");

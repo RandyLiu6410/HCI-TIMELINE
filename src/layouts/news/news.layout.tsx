@@ -49,7 +49,32 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                     <Text style={styles.title}>{news.title}</Text>
                     <View style={styles.grid}>
                         <Text style={styles.update}>{moment(date).format('YYYY/MM/DD hh:mm')}</Text>
-                        <Text style={styles.update}>Updated {Math.round(time / 3600000)} hours ago</Text>
+                        <Text style={styles.update}>Updated {
+                                time > 24 * 3600000
+                                ?
+                                <Text>{Math.round(time / 3600000 / 24)}
+                                {
+                                    Math.round(time / 3600000 / 24) > 1
+                                    ?
+                                    " days ago"
+                                    :
+                                    " day ago"
+                                }
+                                </Text>
+                                :
+                                <Text>{Math.round(time / 3600000)} 
+                                {
+                                    Math.round(time / 3600000) > 1
+                                    ?
+                                    " hours ago"
+                                    :
+                                    " hour ago"
+                                }
+                                </Text>
+                            }
+                        
+                        </Text>
+                        
                     </View>
                 
                     <Portal>
@@ -69,7 +94,7 @@ const NewsLayout: React.FC<NewsLayoutProps> = (props) => {
                                         {
                                             value !== "" ? 
                                             <ConfirmIcon onPress={() => {
-                                                fetch(`http://54.226.5.241:8080/user/customtags?username=${props.route.params.user.name}&tag=${value}`, {
+                                                fetch(`http://54.226.5.241:8080/user/followtags?username=${props.route.params.user.name}&tag=${value}`, {
                                                 method: 'POST'
                                                 })
                                                 .then((res) => {
@@ -147,7 +172,9 @@ const styles = StyleSheet.create({
     },
     source: {
         fontSize: 10,
-        color: "#C1C1C1"
+        color: "#C1C1C1",
+        marginTop: -5,
+        marginBottom: 5
     },
     title: {
         fontSize: 18,

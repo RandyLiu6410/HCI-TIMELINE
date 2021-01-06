@@ -50,21 +50,21 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     }, [following])
 
     function followTag() {
-        if(customtag)
-        {
-            fetch(`http://54.226.5.241:8080/user/customtags?username=${user.name}&tag=${tag}`, {
-              method: 'POST'
-            })
-            .then((res) => {
-                if(res.ok)
-                {
-                    setFollowing(true)
-                }
-            })
-            .catch((err) => {
-            })
-        }
-        else
+        // if(customtag)
+        // {
+        //     fetch(`http://54.226.5.241:8080/user/customtags?username=${user.name}&tag=${tag}`, {
+        //       method: 'POST'
+        //     })
+        //     .then((res) => {
+        //         if(res.ok)
+        //         {
+        //             setFollowing(true)
+        //         }
+        //     })
+        //     .catch((err) => {
+        //     })
+        // }
+        // else
         {
             fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
               method: 'POST'
@@ -81,21 +81,21 @@ const TimelineLayout: React.FC<TimelineLayoutProps> = (props) => {
     }
 
     function unfollowTag() {
-        if(customtag)
-        {
-            fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}&customtag=true`, {
-              method: 'DELETE'
-            })
-            .then((res) => {
-                if(res.ok)
-                {
-                    setFollowing(false)
-                }
-            })
-            .catch((err) => {
-            })
-        }
-        else
+        // if(customtag)
+        // {
+        //     fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}&customtag=true`, {
+        //       method: 'DELETE'
+        //     })
+        //     .then((res) => {
+        //         if(res.ok)
+        //         {
+        //             setFollowing(false)
+        //         }
+        //     })
+        //     .catch((err) => {
+        //     })
+        // }
+        // else
         {
             fetch(`http://54.226.5.241:8080/user/followtags?username=${user.name}&tag=${tag}`, {
               method: 'DELETE'
